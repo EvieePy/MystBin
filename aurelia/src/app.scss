@@ -1,0 +1,280 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+
+$primary-color: light-dark(#FFF, #FFF);
+$primary-bg: light-dark(#121212, #15151d);
+$secondary-bg: light-dark(#282828, #1b1b24);
+$primary-tint: light-dark(#9D5EC4, #9D5EC4);
+$primary-tint-1: light-dark(#a970cb, #a970cb);
+$primary-tint-2: light-dark(#b481d2, #b481d2);
+$primary-tint-3: light-dark(#bf93d8, #bf93d8);
+$primary-tint-4: light-dark(#caa4df, #caa4df);
+$primary-tint-5: light-dark(#d5b6e5, #d5b6e5);
+$primary-tint-3--10: light-dark(#bf93d81a, lab(67.2% 29.07 -28.96 / 0.102));
+$primary-tint-3--70: light-dark(#bf93d8b3, #bf93d8b3);
+$primary-tint-6: light-dark(#f2d8ffef, #f6e3ffef);
+$primary-tint-6--30: light-dark(#f2d8ffef, #f7e6ff4d);
+$primary-tint-7: light-dark(#f2d8ffef, #dfcbe9e0);
+
+$primary-border: 1px solid $primary-tint-3--10;
+
+:root {
+  color-scheme: light dark;
+}
+
+@font-face {
+  font-family: "Noto Sans";
+  font-weight: 500;
+  font-variation-settings: "wdth" 100;
+  font-display: swap;
+  src: url("NotoSans_V.ttf") format("ttf");
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  line-height: 1.5em;
+}
+
+body {
+  display: grid;
+  min-height: 100vh;
+  min-height: 100dvh;
+  max-width: 100vw;
+  overflow-x: hidden;
+  grid-template-columns: auto 1fr;
+
+  /* Fonts */
+  font-family: "Lato", sans-serif;
+
+  /* Colors */
+  background-color: $primary-bg;
+  color: $primary-color;
+}
+
+#app {
+  width: 100vw;
+  max-width: 100vw;
+  display: grid;
+  grid-template-columns: auto 1fr;
+}
+
+a {
+  color: $primary-tint-2;
+  text-decoration: none;
+}
+
+a:hover {
+  color: $primary-tint-3;
+  cursor: pointer;
+}
+
+a:visited {
+  color: $primary-tint-3;
+}
+
+// Sidebar Container
+#sidebar {
+  height: 100vh;
+  background-color: $secondary-bg;
+  min-width: fit-content;
+  max-width: 18rem;
+  padding: 1em;
+  border-right: $primary-border;
+  position: sticky;
+  top: 0;
+  align-self: self-start;
+  display: flex;
+  gap: 1rem;
+  transition: 500ms all ease-in-out;
+}
+
+.hide {
+  max-width: 0;
+  flex-grow: 0 !important;
+}
+
+.sideClosed a,
+.sideClosed span {
+  gap: 0 !important;
+}
+
+.sideClosed {
+  max-width: 5rem;
+  padding: 1em;
+}
+
+.sideClosed span,
+.sideClosed a {
+  justify-content: center !important;
+}
+
+.sideHeaderClosed {
+  display: flex;
+  flex-direction: column !important;
+  min-height: 4rem;
+}
+
+// Sidebar Item Container
+#sidebar ul {
+  list-style: none;
+  max-width: 16rem;
+  overflow: hidden;
+  user-select: none;
+  color: $primary-tint-7;
+  width: 100%;
+}
+
+#sidebar li span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// Sidebar Item Hover
+#sidebar li:hover {
+  cursor: pointer;
+  background-color: $primary-tint-3--10;
+  border-radius: .5em;
+}
+
+// Sidebar Submenu (No Background)
+#sidebar .noBack:hover {
+  cursor: pointer;
+  border-radius: .5em;
+  background-color: transparent;
+}
+
+#sidebar .noBack>span:hover {
+  cursor: pointer;
+  border-radius: .5em;
+  background-color: $primary-tint-3--10;
+}
+
+// Sidebar Submenu (Hover background on Top Button)
+#sidebar .active.noBack>span:hover {
+  cursor: pointer;
+  background-color: $primary-tint-3--10;
+  border-radius: .5em;
+}
+
+// Logo Item Hover
+#sidebar ul li:first-child:hover {
+  background-color: transparent;
+}
+
+// Sidebar Submenu Item Hover Fix
+#sidebar .subMenu li:first-child:hover {
+  background-color: $primary-tint-3--10;
+}
+
+// Sidebar Item Anchor
+#sidebar ul li a {
+  color: $primary-tint-7;
+}
+
+// Sidebar Item Active Anchor
+#sidebar ul li.active a,
+#sidebar ul li.active>span {
+  color: $primary-tint-2;
+}
+
+// Sidebar Item SVG
+#sidebar ul li svg {
+  flex-shrink: 0;
+  height: 1.3em;
+}
+
+// Sidebar anchor, dropdown, logo (Padding/Alignment)
+#sidebar a,
+#sidebar .sideButton,
+#sidebar .logo {
+  display: flex;
+  text-decoration: none;
+  align-items: center;
+  padding: .8em;
+  gap: 1em;
+  transition: all 300ms ease-in-out;
+}
+
+
+// Sidebar Item (Right Align Chevron Icons)
+#sidebar span,
+#sidebar .sideButton span {
+  flex-grow: 1;
+}
+
+// Sidebar Logo Container
+#sidebar .logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  font-weight: 500;
+  font-size: 1.2em;
+  color: $primary-tint-5;
+}
+
+.sideHeader {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 1rem;
+  min-height: 4rem;
+}
+
+.sideHeader>.sideClose {
+  display: flex;
+  justify-content: end;
+}
+
+.sideClose>svg {
+  height: 1.8rem !important;
+  width: auto;
+  color: $primary-tint-6--30;
+}
+
+
+// Sidebar Submenu Container (Transition/Nested Div Fix)
+#sidebar .subMenu {
+  display: grid;
+  padding: 0 .8em;
+  grid-template-rows: 0fr;
+
+  transition: 250ms ease-in-out;
+
+  >div {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  >div li {
+    padding: 0.6em 0.8em;
+    font-size: 0.8em;
+    margin-left: .6em;
+    user-select: none;
+  }
+}
+
+// Sidebar Submenu (Expand)
+#sidebar .subMenu.showMenu {
+  grid-template-rows: 1fr;
+  padding: .5em 1em;
+}
+
+// Logo SVG
+.logo>svg {
+  flex-shrink: 0;
+  height: 1.2em;
+  width: auto;
+}
+
+// Main Content Div
+main {
+  padding: 1em;
+  border: $primary-border;
+  margin: 1rem;
+  border-radius: 0.5em;
+}

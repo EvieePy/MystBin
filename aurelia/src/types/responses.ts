@@ -1,0 +1,3 @@
+interface PasteResponse {
+    id: string;
+}
