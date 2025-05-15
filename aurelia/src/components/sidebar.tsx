@@ -1,4 +1,4 @@
-import { createSignal, Match, Switch } from "solid-js";
+import { createSignal, createEffect, Match, Switch } from "solid-js";
 
 // TODO: Convert these to JSX components... 
 const ChevronDownSvg = <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" /></svg>
@@ -20,6 +20,15 @@ export default function SideBar() {
 
     const [showFileSubMenu, setFileSubMenu] = createSignal(false);
     const [showSideBar, setShowSideBar] = createSignal(false);
+    const [hideText, setHideText] = createSignal(false);
+
+    createEffect(() => {
+        if (!showSideBar()) {
+            setTimeout(() => setHideText(true), 500);
+        } else {
+            setHideText(false);
+        }
+    });
 
     const handleSubMenu = (data: string, e: MouseEvent) => {
         e.preventDefault();
@@ -56,13 +65,13 @@ export default function SideBar() {
                 <li>
                     <a href="/">
                         {HomeSvg}
-                        <span classList={{ hide: !showSideBar() }}>Home</span>
+                        <span classList={{ hide: hideText() }}>Home</span>
                     </a>
                 </li>
                 <li class="noBack" classList={{ active: showFileSubMenu() }}>
                     <span class="sideButton" on:click={(e) => handleSubMenu("fileSubMenu", e)}>
                         {FileSvg}
-                        <span classList={{ hide: !showSideBar() }}>Files</span>
+                        <span classList={{ hide: hideText() }}>Files</span>
                         <Switch>
                             <Match when={!showSideBar()}>{null}</Match>
                             <Match when={showFileSubMenu()}>{ChevronUpSvg}</Match>
@@ -72,19 +81,19 @@ export default function SideBar() {
                     <ul class={showFileSubMenu() ? "subMenu showMenu" : "subMenu"}>
                         <div>
                             <li>
-                                <span>Tab 1</span>
+                                <span classList={{ hide: hideText() }}>Tab 1</span>
                             </li>
                             <li>
-                                <span>Tab 2</span>
+                                <span classList={{ hide: hideText() }}>Tab 2</span>
                             </li>
                             <li class="active">
-                                <span>Tab 3</span>
+                                <span classList={{ hide: hideText() }}>Tab 3</span>
                             </li>
                             <li>
-                                <span>Tab 4</span>
+                                <span classList={{ hide: hideText() }}>Tab 4</span>
                             </li>
                             <li>
-                                <span>Tab 5</span>
+                                <span classList={{ hide: hideText() }}>Tab 5</span>
                             </li>
                         </div>
                     </ul>
@@ -92,7 +101,7 @@ export default function SideBar() {
                 <li>
                     <span class="sideButton">
                         {DownloadSvg}
-                        <span classList={{ hide: !showSideBar() }}>Download</span>
+                        <span classList={{ hide: hideText() }}>Download</span>
                     </span>
                 </li>
             </ul>

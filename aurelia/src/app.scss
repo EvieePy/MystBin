@@ -80,8 +80,7 @@ a:visited {
 #sidebar {
   height: 100vh;
   background-color: $secondary-bg;
-  min-width: fit-content;
-  max-width: 18rem;
+  width: 18rem;
   padding: 1em;
   border-right: $primary-border;
   position: sticky;
@@ -89,7 +88,8 @@ a:visited {
   align-self: self-start;
   display: flex;
   gap: 1rem;
-  transition: 500ms all ease-in-out;
+  transition: width 500ms ease-in-out, padding 500ms ease-in-out;
+  overflow-x: hidden;
 }
 
 .hide {
@@ -103,7 +103,7 @@ a:visited {
 }
 
 .sideClosed {
-  max-width: 5rem;
+  width: 5rem !important;
   padding: 1em;
 }
 
