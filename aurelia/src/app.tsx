@@ -3,8 +3,8 @@ import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
 
 import SideBar from "./components/sidebar";
-import "./app.scss";
-
+import "./css/app.scss";
+import { MetaProvider } from "@solidjs/meta";
 
 const Layout = (props: { children: any; }) => {
   return (
@@ -17,8 +17,13 @@ const Layout = (props: { children: any; }) => {
 
 export default function App() {
   return (
-    <Router root={(props) => <Suspense><Layout>{props.children}</Layout></Suspense>}>
-      <FileRoutes />
-    </Router>
+    <MetaProvider>
+      <script src="theme.js"></script>
+
+      <Router root={(props) => <Suspense><Layout>{props.children}</Layout></Suspense>}>
+        <FileRoutes />
+      </Router>
+    </MetaProvider>
+
   );
 }
