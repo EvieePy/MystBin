@@ -1,5 +1,4 @@
-
-const ChevronRightSVG = (props) => (
+const ChevronDownSVG = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={24}
@@ -8,7 +7,7 @@ const ChevronRightSVG = (props) => (
     viewBox="0 -960 960 960"
     {...props}
   >
-    <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
+    <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
   </svg>
 )
-export default ChevronRightSVG
+export default ChevronDownSVG
