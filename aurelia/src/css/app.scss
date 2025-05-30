@@ -1,17 +1,13 @@
-@use "variables" as *;
-@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
-
-
 :root {
   color-scheme: light dark;
 }
 
 @font-face {
-  font-family: "Noto Sans";
+  font-family: "Nunito Sans";
   font-weight: 500;
+  src: url("NunitoSans_V.ttf") format("ttf");
   font-variation-settings: "wdth" 100;
   font-display: swap;
-  src: url("NotoSans_V.ttf") format("ttf");
 }
 
 * {
@@ -33,7 +29,8 @@ body {
   grid-template-columns: auto 1fr;
 
   /* Fonts */
-  font-family: "Lato", sans-serif;
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 0.9em;
 
   /* Colors */
   background-color: var(--primary-bg);
@@ -66,7 +63,7 @@ a:visited {
   height: 100vh;
   background-color: var(--secondary-bg);
   width: 18rem;
-  padding: 1em;
+  padding: 0.8em;
   border-right: var(--primary-border);
   position: sticky;
   top: 0;
@@ -107,7 +104,6 @@ a:visited {
 // Sidebar Item Container
 #sidebar ul {
   list-style: none;
-  max-width: 16rem;
   overflow: hidden;
   user-select: none;
   color: var(--primary-tint-7);
@@ -220,7 +216,7 @@ a:visited {
 }
 
 .sideClose>svg {
-  height: 1.8rem !important;
+  height: 1.6rem !important;
   width: auto;
   color: var(--primary-tint-6--30);
 }
@@ -241,13 +237,18 @@ a:visited {
   }
 
   >div li {
-    padding: 0.6em 0.8em;
+    padding: 0.6em;
     font-size: 0.8em;
     margin-left: .6em;
     user-select: none;
     display: flex;
     flex-grow: 1;
     align-items: center;
+    gap: 1em;
+  }
+
+  >div li svg {
+    height: 2.2em;
   }
 }
 
@@ -263,13 +264,12 @@ a:visited {
   flex-direction: column;
   align-self: center;
   margin-top: auto;
-  gap: 0.5em;
   width: 100%;
   align-items: center;
 }
 
 #sidebar .meta>.smallText {
-  font-size: 0.5em;
+  font-size: 0.6em;
   opacity: 0.6;
   text-align: center;
 }
@@ -307,4 +307,46 @@ main {
   border: var(--primary-border);
   margin: 1rem;
   border-radius: 0.5em;
+}
+
+// Settings Modal
+.modalOpen {
+  overflow: hidden;
+}
+
+.outerModal {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  overflow: hidden;
+  z-index: 998;
+  background-color: var(--primary-modal);
+}
+
+.dialogContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.innerModal {
+  display: flex;
+  padding: 2em;
+  background-color: var(--primary-bg);
+  border-radius: 0.5em;
+  flex-direction: column;
+  gap: 1em;
+  min-width: 18rem;
+  z-index: 999;
+}
+
+.innerModal hr {
+  opacity: .1;
+}
+
+.innerModal .title {
+  font-weight: 600;
+  font-size: 1.4em;
 }
