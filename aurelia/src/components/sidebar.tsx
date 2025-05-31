@@ -136,7 +136,104 @@ export default function SideBar() {
   return (
     <>
       {/* Modals */}
-      <SettingsModal showModal={showAccessModal()} title="Accessibility Settings" onOutsideClick={handleOutsideModal} />
+      <SettingsModal showModal={showAccessModal()} title="Accessibility Settings" onOutsideClick={handleOutsideModal} >
+
+        <span class="settingsHeader">Colour Accessibility</span>
+        <span class="settingsDesc">Settings to help with various colour deficiencies and colour blindness.</span>
+
+        <div class="colourBlindGrid">
+          <div class="colourBlindContainer">
+            <div class="colourBlindInner">
+              <div class="ColourBlindTitle">Default</div>
+
+              <div class="colourBlindPreview">
+                <div class="colourBlindSide">
+                  <div style="border: 1px solid #ce75cc;"></div>
+                  <div style="border: 1px solid #ce75cc;"></div>
+                  <div style="border: 1px solid #ce75cc;"></div>
+                  <div style="border: 1px solid #ce75cc;"></div>
+                </div>
+                <div class="colourBlindMain">
+                  <div class="colourBlindMainInner">
+                    <div class="colourBlindBox" style="background-color: #34af9b;"></div>
+                    <div class="colourBlindBox" style="background-color: #f0e442;"></div>
+                  </div>
+                  <div style="border: 2px solid #34af9b;"></div>
+                  <div style="border: 2px solid #f0e442;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="colourBlindContainer">
+            <div class="colourBlindInner">
+              <div class="ColourBlindTitle">Deuteranopia</div>
+
+              <div class="colourBlindPreview">
+                <div class="colourBlindSide">
+                  <div style="border: 1px solid #6288d1;"></div>
+                  <div style="border: 1px solid #6288d1;"></div>
+                  <div style="border: 1px solid #6288d1;"></div>
+                  <div style="border: 1px solid #6288d1;"></div>
+                </div>
+                <div class="colourBlindMain">
+                  <div class="colourBlindMainInner">
+                    <div class="colourBlindBox" style="background-color: #1585fd;"></div>
+                    <div class="colourBlindBox" style="background-color: #d69a00;"></div>
+                  </div>
+                  <div style="border: 2px solid #1585fd;"></div>
+                  <div style="border: 2px solid #d69a00;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="colourBlindContainer">
+            <div class="colourBlindInner">
+              <div class="ColourBlindTitle">Protanopia</div>
+
+              <div class="colourBlindPreview">
+                <div class="colourBlindSide">
+                  <div style="border: 1px solid #ce75cc;"></div>
+                  <div style="border: 1px solid #ce75cc;"></div>
+                  <div style="border: 1px solid #ce75cc;"></div>
+                  <div style="border: 1px solid #ce75cc;"></div>
+                </div>
+                <div class="colourBlindMain">
+                  <div class="colourBlindMainInner">
+                    <div class="colourBlindBox" style="background-color: #1585fd;"></div>
+                    <div class="colourBlindBox" style="background-color: #E1EC1B;"></div>
+                  </div>
+                  <div style="border: 2px solid #1585fd;"></div>
+                  <div style="border: 2px solid #E1EC1B;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="colourBlindContainer">
+            <div class="colourBlindInner">
+              <div class="ColourBlindTitle">Tritanopia</div>
+
+              <div class="colourBlindPreview">
+                <div class="colourBlindSide">
+                  <div style="border: 1px solid #1585fd;"></div>
+                  <div style="border: 1px solid #1585fd;"></div>
+                  <div style="border: 1px solid #1585fd;"></div>
+                  <div style="border: 1px solid #1585fd;"></div>
+                </div>
+                <div class="colourBlindMain">
+                  <div class="colourBlindMainInner">
+                    <div class="colourBlindBox" style="background-color: #1585fd;"></div>
+                    <div class="colourBlindBox" style="background-color: #fa4549;"></div>
+                  </div>
+                  <div style="border: 2px solid #1585fd;"></div>
+                  <div style="border: 2px solid #fa4549;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </SettingsModal>
 
       <nav id="sidebar" classList={{ sideClosed: settings.side_closed }}>
         <ul>
