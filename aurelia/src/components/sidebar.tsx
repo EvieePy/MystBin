@@ -74,8 +74,13 @@ export default function SideBar() {
       return;
     }
 
+    if (settings.side_closed) {
+      setTimeout(() => setSettings("submenu", data), 500);
+    } else {
+      setSettings("submenu", data);
+    }
+
     setSettings("side_closed", false);
-    setSettings("submenu", data);
     localStorage.setItem("submenu", String(data));
   };
 
