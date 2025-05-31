@@ -22,20 +22,14 @@ interface SettingsProviderP {
 
 export function SettingsProvider(props: SettingsProviderP) {
   const store = createSettingsStore();
-  return (
-    <SettingsContext.Provider value={store}>
-      {props.children}
-    </SettingsContext.Provider>
-  );
+  return <SettingsContext.Provider value={store}>{props.children}</SettingsContext.Provider>;
 }
 
 export function useSettingsContext(): SettingsStoreT {
   const context = useContext(SettingsContext);
 
   if (!context) {
-    throw new Error(
-      "SettingsContext can only be used within a SettingsStoreProvider.",
-    );
+    throw new Error("SettingsContext can only be used within a SettingsStoreProvider.");
   }
 
   return context;

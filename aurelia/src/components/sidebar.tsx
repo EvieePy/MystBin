@@ -1,13 +1,4 @@
-import {
-  createSignal,
-  createEffect,
-  Match,
-  Switch,
-  Suspense,
-  createResource,
-  onMount,
-  on,
-} from "solid-js";
+import { createSignal, createEffect, Match, Switch, Suspense, createResource, onMount, on } from "solid-js";
 import ChevronRightSVG from "~/svg/ChevronRight";
 import ChevronDownSVG from "~/svg/ChevronDown";
 import HamburgerMenuSVG from "~/svg/HamburgerMenu";
@@ -51,20 +42,11 @@ export default function SideBar() {
 
   onMount(() => {
     const localTheme = localStorage.getItem("theme") as "light" | "dark";
-    const systemSettingDark = window.matchMedia("(prefers-color-scheme: dark)")
-      ?.matches
-      ? false
-      : true;
+    const systemSettingDark = window.matchMedia("(prefers-color-scheme: dark)")?.matches ? false : true;
     const side_closed = localStorage.getItem("side_closed") === "true";
 
-    setSettings(
-      "is_light",
-      localTheme ? localTheme === "light" : systemSettingDark,
-    );
-    setSettings(
-      "theme",
-      localTheme ? localTheme : systemSettingDark === true ? "dark" : "light",
-    );
+    setSettings("is_light", localTheme ? localTheme === "light" : systemSettingDark);
+    setSettings("theme", localTheme ? localTheme : systemSettingDark === true ? "dark" : "light");
     setSettings("side_closed", side_closed);
   });
 
@@ -148,11 +130,7 @@ export default function SideBar() {
   return (
     <>
       {/* Modals */}
-      <SettingsModal
-        showModal={showAccessModal()}
-        title="Accessibility Settings"
-        onOutsideClick={handleOutsideModal}
-      />
+      <SettingsModal showModal={showAccessModal()} title="Accessibility Settings" onOutsideClick={handleOutsideModal} />
 
       <nav
         id="sidebar"
@@ -450,10 +428,7 @@ export default function SideBar() {
                 <a href="https://discord.gg/RAKc3HF" title="Discord">
                   <DiscordSVG />
                 </a>
-                <a
-                  href="https://github.com/PythonistaGuild/mystbin"
-                  title="GitHub"
-                >
+                <a href="https://github.com/PythonistaGuild/mystbin" title="GitHub">
                   <GitHubSVG />
                 </a>
                 <a href="/" title="Documentation">

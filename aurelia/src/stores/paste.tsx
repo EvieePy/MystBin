@@ -19,20 +19,14 @@ interface PasteProviderP {
 
 export function PasteProvider(props: PasteProviderP) {
   const store = createPasteStore();
-  return (
-    <PasteContext.Provider value={store}>
-      {props.children}
-    </PasteContext.Provider>
-  );
+  return <PasteContext.Provider value={store}>{props.children}</PasteContext.Provider>;
 }
 
 export function usePasteContext(): PasteStoreT {
   const context = useContext(PasteContext);
 
   if (!context) {
-    throw new Error(
-      "PasteContext can only be used within a PasteStoreProvider.",
-    );
+    throw new Error("PasteContext can only be used within a PasteStoreProvider.");
   }
 
   return context;

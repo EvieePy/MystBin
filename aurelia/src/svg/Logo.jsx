@@ -1,10 +1,5 @@
 const LogoSVG = (props) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="currentColor"
-    viewBox="0 0 939.41 665.11"
-    {...props}
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 939.41 665.11" {...props}>
     <g data-name="Layer 2">
       <g data-name="Mono dark mini">
         <path

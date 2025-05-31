@@ -1,7 +1,4 @@
-function calculateSettingAsThemeString({
-  localStorageTheme,
-  systemSettingDark,
-}) {
+function calculateSettingAsThemeString({ localStorageTheme, systemSettingDark }) {
   if (localStorageTheme !== null) {
     return localStorageTheme;
   }
