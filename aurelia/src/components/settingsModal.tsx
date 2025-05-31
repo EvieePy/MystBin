@@ -1,4 +1,4 @@
-import { createEffect, Show } from "solid-js";
+import { createEffect, JSX, Show } from "solid-js";
 
 interface HandleOutsideClick {
   (e: MouseEvent): void;
@@ -8,6 +8,7 @@ interface Props {
   showModal: boolean;
   title: string;
   onOutsideClick: HandleOutsideClick;
+  children: JSX.Element;
 }
 
 export default function SettingsModal(props: Props) {
@@ -34,7 +35,7 @@ export default function SettingsModal(props: Props) {
           <div class="innerModal" onclick={handleInnerClick}>
             <span class="title">{title()}</span>
             <hr />
-            <span>Hello World</span>
+            {props.children}
           </div>
         </div>
       </div>

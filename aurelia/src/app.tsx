@@ -1,4 +1,4 @@
-import { createEffect, onMount, Suspense } from "solid-js";
+import { onMount, Suspense } from "solid-js";
 import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
 
