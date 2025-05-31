@@ -50,10 +50,15 @@ export default function SideBar() {
     setSettings("side_closed", side_closed);
   });
 
-  // FIXME: Starting in a closed state and opening quickly causes a bug!
+  let hideTextTimeout: ReturnType<typeof setTimeout> | null = null;
+
   createEffect(() => {
+    if (hideTextTimeout) {
+      clearTimeout(hideTextTimeout);
+      hideTextTimeout = null;
+    }
     if (settings.side_closed) {
-      setTimeout(() => setHideText(true), 500);
+      hideTextTimeout = setTimeout(() => setHideText(true), 500);
     } else {
       setHideText(false);
     }
