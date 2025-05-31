@@ -42,11 +42,12 @@ export default function SideBar() {
 
   onMount(() => {
     const localTheme = localStorage.getItem("theme") as "light" | "dark";
-    const systemSettingDark = window.matchMedia("(prefers-color-scheme: dark)")?.matches ? false : true;
+    const systemSettingDark = !window.matchMedia("(prefers-color-scheme: dark)")?.matches;
+
     const side_closed = localStorage.getItem("side_closed") === "true";
 
     setSettings("is_light", localTheme ? localTheme === "light" : systemSettingDark);
-    setSettings("theme", localTheme ? localTheme : systemSettingDark === true ? "dark" : "light");
+    setSettings("theme", localTheme || (systemSettingDark ? "dark" : "light"));
     setSettings("side_closed", side_closed);
   });
 
