@@ -144,7 +144,7 @@ export default function SideBar() {
         <div class="colourBlindGrid">
           <div class="colourBlindContainer">
             <div class="colourBlindInner">
-              <div class="ColourBlindTitle">Default</div>
+              <div class="colourBlindTitle">Default</div>
 
               <div class="colourBlindPreview">
                 <div class="colourBlindSide">
@@ -167,7 +167,7 @@ export default function SideBar() {
 
           <div class="colourBlindContainer">
             <div class="colourBlindInner">
-              <div class="ColourBlindTitle">Deuteranopia</div>
+              <div class="colourBlindTitle">Deuteranopia</div>
 
               <div class="colourBlindPreview">
                 <div class="colourBlindSide">
@@ -190,7 +190,7 @@ export default function SideBar() {
 
           <div class="colourBlindContainer">
             <div class="colourBlindInner">
-              <div class="ColourBlindTitle">Protanopia</div>
+              <div class="colourBlindTitle">Protanopia</div>
 
               <div class="colourBlindPreview">
                 <div class="colourBlindSide">
@@ -212,7 +212,7 @@ export default function SideBar() {
           </div>
           <div class="colourBlindContainer">
             <div class="colourBlindInner">
-              <div class="ColourBlindTitle">Tritanopia</div>
+              <div class="colourBlindTitle">Tritanopia</div>
 
               <div class="colourBlindPreview">
                 <div class="colourBlindSide">
