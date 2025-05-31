@@ -10,7 +10,7 @@ type SettingsStoreT = [
 const SettingsContext = createContext<SettingsStoreT>();
 
 function createSettingsStore(): SettingsStoreT {
-    const [settingsState, setSettingsState] = createStore({side_closed: true, submenu: 0, ligatures: false});
+    const [settingsState, setSettingsState] = createStore({ side_closed: true, submenu: 0, ligatures: false, word_wrap: false, line_numbers: true });
     return [settingsState, setSettingsState] as SettingsStoreT
 }
 

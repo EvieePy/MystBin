@@ -14,7 +14,12 @@ const Layout = (props: { children: any; }) => {
     const [, setState] = useSettingsContext();
 
     const ligatures = localStorage.getItem("ligatures");
+    const line_numbers = localStorage.getItem("line_numbers");
+    const word_wrap = localStorage.getItem("word_wrap");
+
     setState("ligatures", ligatures === "true");
+    setState("line_numbers", line_numbers ? line_numbers === "true" : true);
+    setState("word_wrap", word_wrap === "true");
   });
 
   return (

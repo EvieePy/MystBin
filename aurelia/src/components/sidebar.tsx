@@ -102,6 +102,24 @@ export default function SideBar() {
         setSettings("ligatures", flipped);
     }
 
+    const handleLineNumClick = (e: MouseEvent) => {
+        e.preventDefault();
+
+        const flipped = !settings.line_numbers;
+
+        localStorage.setItem("line_numbers", String(flipped));
+        setSettings("line_numbers", flipped);
+    }
+
+    const handleWordWrapClick = (e: MouseEvent) => {
+        e.preventDefault();
+
+        const flipped = !settings.word_wrap;
+
+        localStorage.setItem("word_wrap", String(flipped));
+        setSettings("word_wrap", flipped);
+    }
+
     const handleOutsideModal = (e: MouseEvent) => {
         e.stopPropagation();
         setshowAccessModal(false);
@@ -220,6 +238,14 @@ export default function SideBar() {
                                 <li onclick={handleLigaturesClick}>
                                     <span classList={{ hide: hideText() }}><span>Font Ligatures </span></span>
                                     <ToggleSwitch checked={settings.ligatures} />
+                                </li>
+                                <li onclick={handleLineNumClick}>
+                                    <span classList={{ hide: hideText() }}><span>Show Line Numbers </span></span>
+                                    <ToggleSwitch checked={settings.line_numbers} />
+                                </li>
+                                <li onclick={handleWordWrapClick}>
+                                    <span classList={{ hide: hideText() }}><span>Word Wrap </span></span>
+                                    <ToggleSwitch checked={settings.word_wrap} />
                                 </li>
                                 <li onclick={() => setshowAccessModal(true)}>
                                     <span classList={{ hide: hideText() }}>Accessibility Menu</span>
