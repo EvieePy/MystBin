@@ -26,7 +26,7 @@ let systemSettingDark = window.matchMedia("(prefers-color-scheme: dark)");
 
 let currentThemeSetting = calculateSettingAsThemeString({
   localStorageTheme,
-  systemSettingDark,
+  systemSettingDark
 });
 
 updateThemeOnHtmlEl({ theme: currentThemeSetting });

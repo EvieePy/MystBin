@@ -11,7 +11,7 @@ function createSettingsStore(): SettingsStoreT {
     submenu: 0,
     ligatures: false,
     word_wrap: false,
-    line_numbers: true,
+    line_numbers: true
   });
   return [settingsState, setSettingsState] as SettingsStoreT;
 }

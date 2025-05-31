@@ -6,7 +6,7 @@ const ToggleOneSVG = (props) => (
     height={6}
     className="cross"
     style={{
-      enableBackground: "new 0 0 512 512",
+      enableBackground: "new 0 0 512 512"
     }}
     viewBox="0 0 365.696 365.696"
     {...props}

@@ -138,19 +138,9 @@ export default function SideBar() {
       {/* Modals */}
       <SettingsModal showModal={showAccessModal()} title="Accessibility Settings" onOutsideClick={handleOutsideModal} />
 
-      <nav
-        id="sidebar"
-        classList={{
-          sideClosed: settings.side_closed,
-        }}
-      >
+      <nav id="sidebar" classList={{ sideClosed: settings.side_closed }}>
         <ul>
-          <li
-            class="sideHeader"
-            classList={{
-              sideHeaderClosed: settings.side_closed,
-            }}
-          >
+          <li class="sideHeader" classList={{ sideHeaderClosed: settings.side_closed }}>
             <Switch>
               <Match when={!settings.side_closed}>
                 <span class="logo">
@@ -169,32 +159,15 @@ export default function SideBar() {
           <li>
             <a href="/">
               <HomeSVG />
-              <span
-                classList={{
-                  hide: hideText(),
-                }}
-              >
-                Home
-              </span>
+              <span classList={{ hide: hideText() }}>Home</span>
             </a>
           </li>
 
           {/* Files Submenu */}
-          <li
-            class="noBack"
-            classList={{
-              active: settings.submenu === 1,
-            }}
-          >
+          <li class="noBack" classList={{ active: settings.submenu === 1 }}>
             <span class="sideButton" on:click={(e) => handleSubMenu(1, e)}>
               <FileSVG />
-              <span
-                classList={{
-                  hide: hideText(),
-                }}
-              >
-                Files
-              </span>
+              <span classList={{ hide: hideText() }}>Files</span>
               <Switch>
                 <Match when={settings.side_closed}>{null}</Match>
                 <Match when={settings.submenu === 1}>
@@ -208,70 +181,29 @@ export default function SideBar() {
             <ul class={settings.submenu === 1 ? "subMenu showMenu" : "subMenu"}>
               <div>
                 <li>
-                  <span
-                    classList={{
-                      hide: hideText(),
-                    }}
-                  >
-                    Tab 1
-                  </span>
+                  <span classList={{ hide: hideText() }}>Tab 1</span>
                 </li>
                 <li>
-                  <span
-                    classList={{
-                      hide: hideText(),
-                    }}
-                  >
-                    Tab 2
-                  </span>
+                  <span classList={{ hide: hideText() }}>Tab 2</span>
                 </li>
                 <li class="active">
-                  <span
-                    classList={{
-                      hide: hideText(),
-                    }}
-                  >
-                    Tab 3
-                  </span>
+                  <span classList={{ hide: hideText() }}>Tab 3</span>
                 </li>
                 <li>
-                  <span
-                    classList={{
-                      hide: hideText(),
-                    }}
-                  >
-                    Tab 4
-                  </span>
+                  <span classList={{ hide: hideText() }}>Tab 4</span>
                 </li>
                 <li>
-                  <span
-                    classList={{
-                      hide: hideText(),
-                    }}
-                  >
-                    Tab 5
-                  </span>
+                  <span classList={{ hide: hideText() }}>Tab 5</span>
                 </li>
               </div>
             </ul>
           </li>
 
           {/* Actions Submenu */}
-          <li
-            class="noBack"
-            classList={{
-              active: settings.submenu === 2,
-            }}
-          >
+          <li class="noBack" classList={{ active: settings.submenu === 2 }}>
             <span class="sideButton" on:click={(e) => handleSubMenu(2, e)}>
               <ActionsSVG />
-              <span
-                classList={{
-                  hide: hideText(),
-                }}
-              >
-                Manage
-              </span>
+              <span classList={{ hide: hideText() }}>Manage</span>
               <Switch>
                 <Match when={settings.side_closed}>{null}</Match>
                 <Match when={settings.submenu === 2}>
@@ -285,70 +217,29 @@ export default function SideBar() {
             <ul class={settings.submenu === 2 ? "subMenu showMenu" : "subMenu"}>
               <div>
                 <li>
-                  <span
-                    classList={{
-                      hide: hideText(),
-                    }}
-                  >
-                    Tab 1
-                  </span>
+                  <span classList={{ hide: hideText() }}>Tab 1</span>
                 </li>
                 <li>
-                  <span
-                    classList={{
-                      hide: hideText(),
-                    }}
-                  >
-                    Tab 2
-                  </span>
+                  <span classList={{ hide: hideText() }}>Tab 2</span>
                 </li>
                 <li class="active">
-                  <span
-                    classList={{
-                      hide: hideText(),
-                    }}
-                  >
-                    Tab 3
-                  </span>
+                  <span classList={{ hide: hideText() }}>Tab 3</span>
                 </li>
                 <li>
-                  <span
-                    classList={{
-                      hide: hideText(),
-                    }}
-                  >
-                    Tab 4
-                  </span>
+                  <span classList={{ hide: hideText() }}>Tab 4</span>
                 </li>
                 <li>
-                  <span
-                    classList={{
-                      hide: hideText(),
-                    }}
-                  >
-                    Tab 5
-                  </span>
+                  <span classList={{ hide: hideText() }}>Tab 5</span>
                 </li>
               </div>
             </ul>
           </li>
 
           {/* Settings Submenu */}
-          <li
-            class="noBack"
-            classList={{
-              active: settings.submenu === 3,
-            }}
-          >
+          <li class="noBack" classList={{ active: settings.submenu === 3 }}>
             <span class="sideButton" on:click={(e) => handleSubMenu(3, e)}>
               <SettingsSVG />
-              <span
-                classList={{
-                  hide: hideText(),
-                }}
-              >
-                Settings
-              </span>
+              <span classList={{ hide: hideText() }}>Settings</span>
               <Switch>
                 <Match when={settings.side_closed}>{null}</Match>
                 <Match when={settings.submenu === 3}>
@@ -362,53 +253,31 @@ export default function SideBar() {
             <ul class={settings.submenu === 3 ? "subMenu showMenu" : "subMenu"}>
               <div>
                 <li onclick={handleLightModeClick}>
-                  <span
-                    classList={{
-                      hide: hideText(),
-                    }}
-                  >
+                  <span classList={{ hide: hideText() }}>
                     <span>Light Theme </span>
                   </span>
                   <ToggleSwitch checked={settings.is_light} />
                 </li>
                 <li onclick={handleLigaturesClick}>
-                  <span
-                    classList={{
-                      hide: hideText(),
-                    }}
-                  >
+                  <span classList={{ hide: hideText() }}>
                     <span>Font Ligatures </span>
                   </span>
                   <ToggleSwitch checked={settings.ligatures} />
                 </li>
                 <li onclick={handleLineNumClick}>
-                  <span
-                    classList={{
-                      hide: hideText(),
-                    }}
-                  >
+                  <span classList={{ hide: hideText() }}>
                     <span>Show Line Numbers </span>
                   </span>
                   <ToggleSwitch checked={settings.line_numbers} />
                 </li>
                 <li onclick={handleWordWrapClick}>
-                  <span
-                    classList={{
-                      hide: hideText(),
-                    }}
-                  >
+                  <span classList={{ hide: hideText() }}>
                     <span>Word Wrap </span>
                   </span>
                   <ToggleSwitch checked={settings.word_wrap} />
                 </li>
                 <li onclick={() => setshowAccessModal(true)}>
-                  <span
-                    classList={{
-                      hide: hideText(),
-                    }}
-                  >
-                    Accessibility Menu
-                  </span>
+                  <span classList={{ hide: hideText() }}>Accessibility Menu</span>
                   <VerticalEllipsisSVG />
                 </li>
               </div>

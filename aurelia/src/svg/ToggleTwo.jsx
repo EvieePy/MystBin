@@ -6,7 +6,7 @@ const ToggleTwoSVG = (props) => (
     height={10}
     className="checkmark"
     style={{
-      enableBackground: "new 0 0 512 512",
+      enableBackground: "new 0 0 512 512"
     }}
     viewBox="0 0 24 24"
     {...props}
