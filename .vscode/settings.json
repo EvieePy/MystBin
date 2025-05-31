@@ -1,0 +1,4 @@
+{
+    "biome.requireConfiguration": true,
+    "editor.defaultFormatter": "biomejs.biome"
+}

@@ -8,8 +8,7 @@ import { MetaProvider } from "@solidjs/meta";
 import { PasteProvider } from "./stores/paste";
 import { SettingsProvider, useSettingsContext } from "./stores/settings";
 
-const Layout = (props: { children: any; }) => {
-
+const Layout = (props: { children: any }) => {
   onMount(() => {
     const [, setState] = useSettingsContext();
 
@@ -37,12 +36,17 @@ export default function App() {
 
       <SettingsProvider>
         <PasteProvider>
-          <Router root={(props) => <Suspense><Layout>{props.children}</Layout></Suspense>}>
+          <Router
+            root={(props) => (
+              <Suspense>
+                <Layout>{props.children}</Layout>
+              </Suspense>
+            )}
+          >
             <FileRoutes />
           </Router>
         </PasteProvider>
       </SettingsProvider>
-
     </MetaProvider>
   );
 }

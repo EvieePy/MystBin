@@ -17,5 +17,5 @@ const ToggleOneSVG = (props) => (
       data-original="#000000"
     />
   </svg>
-)
-export default ToggleOneSVG
+);
+export default ToggleOneSVG;

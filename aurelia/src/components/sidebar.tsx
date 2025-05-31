@@ -1,4 +1,13 @@
-import { createSignal, createEffect, Match, Switch, Suspense, createResource, onMount, on } from "solid-js";
+import {
+  createSignal,
+  createEffect,
+  Match,
+  Switch,
+  Suspense,
+  createResource,
+  onMount,
+  on,
+} from "solid-js";
 import ChevronRightSVG from "~/svg/ChevronRight";
 import ChevronDownSVG from "~/svg/ChevronDown";
 import HamburgerMenuSVG from "~/svg/HamburgerMenu";
@@ -17,274 +26,454 @@ import HomeSVG from "~/svg/Home";
 import FileSVG from "~/svg/File";
 
 const fetchApiVersion = async () => {
-    let resp: Response;
+  let resp: Response;
 
-    try {
-        resp = await fetch("http://localhost:8000/version");
-    } catch (error) {
-        return "Unknown"
-    }
+  try {
+    resp = await fetch("http://localhost:8000/version");
+  } catch (error) {
+    return "Unknown";
+  }
 
-    if (!resp.ok) { return "Unknown" }
+  if (!resp.ok) {
+    return "Unknown";
+  }
 
-    const data: VersionResponse = await resp.json();
-    return data["version"];
-}
-
+  const data: VersionResponse = await resp.json();
+  return data["version"];
+};
 
 export default function SideBar() {
-    const [settings, setSettings] = useSettingsContext();
-    const [hideText, setHideText] = createSignal(true);
+  const [settings, setSettings] = useSettingsContext();
+  const [hideText, setHideText] = createSignal(true);
 
-    const [showAccessModal, setshowAccessModal] = createSignal(false);
-    const [apiVersion] = createResource(fetchApiVersion);
+  const [showAccessModal, setshowAccessModal] = createSignal(false);
+  const [apiVersion] = createResource(fetchApiVersion);
 
-    onMount(() => {
-        const localTheme = localStorage.getItem("theme") as "light" | "dark";
-        const systemSettingDark = window.matchMedia("(prefers-color-scheme: dark)")?.matches ? false : true;
-        const side_closed = localStorage.getItem("side_closed") === "true";
+  onMount(() => {
+    const localTheme = localStorage.getItem("theme") as "light" | "dark";
+    const systemSettingDark = window.matchMedia("(prefers-color-scheme: dark)")
+      ?.matches
+      ? false
+      : true;
+    const side_closed = localStorage.getItem("side_closed") === "true";
 
-        setSettings("is_light", localTheme ? localTheme === "light" : systemSettingDark);
-        setSettings("theme", localTheme ? localTheme : systemSettingDark === true ? "dark" : "light");
-        setSettings("side_closed", side_closed);
-    });
+    setSettings(
+      "is_light",
+      localTheme ? localTheme === "light" : systemSettingDark,
+    );
+    setSettings(
+      "theme",
+      localTheme ? localTheme : systemSettingDark === true ? "dark" : "light",
+    );
+    setSettings("side_closed", side_closed);
+  });
 
-    // FIXME: Starting in a closed state and opening quickly causes a bug!
-    createEffect(() => {
-        if (settings.side_closed) {
-            setTimeout(() => setHideText(true), 500);
-        } else {
-            setHideText(false);
-        }
-    });
+  // FIXME: Starting in a closed state and opening quickly causes a bug!
+  createEffect(() => {
+    if (settings.side_closed) {
+      setTimeout(() => setHideText(true), 500);
+    } else {
+      setHideText(false);
+    }
+  });
 
-    const handleSubMenu = (data: number, e: MouseEvent) => {
-        e.preventDefault();
+  const handleSubMenu = (data: number, e: MouseEvent) => {
+    e.preventDefault();
 
-        if (data === settings.submenu) {
-            setSettings("submenu", 0);
-            localStorage.setItem("submenu", "0");
-            return;
-        }
-
-        setSettings("side_closed", false);
-        setSettings("submenu", data);
-        localStorage.setItem("submenu", String(data));
+    if (data === settings.submenu) {
+      setSettings("submenu", 0);
+      localStorage.setItem("submenu", "0");
+      return;
     }
 
-    const handleShowSide = () => {
-        if (settings.side_closed === false) {
-            setSettings("submenu", 0);
-            localStorage.setItem("submenu", "0");
-        }
+    setSettings("side_closed", false);
+    setSettings("submenu", data);
+    localStorage.setItem("submenu", String(data));
+  };
 
-        localStorage.setItem("side_closed", String(!settings.side_closed));
-        setSettings("side_closed", !settings.side_closed);
+  const handleShowSide = () => {
+    if (settings.side_closed === false) {
+      setSettings("submenu", 0);
+      localStorage.setItem("submenu", "0");
     }
 
-    const handleLightModeClick = (e: MouseEvent) => {
-        e.preventDefault();
+    localStorage.setItem("side_closed", String(!settings.side_closed));
+    setSettings("side_closed", !settings.side_closed);
+  };
 
-        const flipped = !settings.is_light;
-        const theme = flipped ? "light" : "dark";
+  const handleLightModeClick = (e: MouseEvent) => {
+    e.preventDefault();
 
-        localStorage.setItem("theme", theme);
-        document.querySelector("html")!.setAttribute("data-theme", theme);
-        setSettings("is_light", flipped);
-    }
+    const flipped = !settings.is_light;
+    const theme = flipped ? "light" : "dark";
 
-    const handleLigaturesClick = (e: MouseEvent) => {
-        e.preventDefault();
+    localStorage.setItem("theme", theme);
+    document.querySelector("html")!.setAttribute("data-theme", theme);
+    setSettings("is_light", flipped);
+  };
 
-        const flipped = !settings.ligatures;
+  const handleLigaturesClick = (e: MouseEvent) => {
+    e.preventDefault();
 
-        localStorage.setItem("ligatures", String(flipped));
-        setSettings("ligatures", flipped);
-    }
+    const flipped = !settings.ligatures;
 
-    const handleLineNumClick = (e: MouseEvent) => {
-        e.preventDefault();
+    localStorage.setItem("ligatures", String(flipped));
+    setSettings("ligatures", flipped);
+  };
 
-        const flipped = !settings.line_numbers;
+  const handleLineNumClick = (e: MouseEvent) => {
+    e.preventDefault();
 
-        localStorage.setItem("line_numbers", String(flipped));
-        setSettings("line_numbers", flipped);
-    }
+    const flipped = !settings.line_numbers;
 
-    const handleWordWrapClick = (e: MouseEvent) => {
-        e.preventDefault();
+    localStorage.setItem("line_numbers", String(flipped));
+    setSettings("line_numbers", flipped);
+  };
 
-        const flipped = !settings.word_wrap;
+  const handleWordWrapClick = (e: MouseEvent) => {
+    e.preventDefault();
 
-        localStorage.setItem("word_wrap", String(flipped));
-        setSettings("word_wrap", flipped);
-    }
+    const flipped = !settings.word_wrap;
 
-    const handleOutsideModal = (e: MouseEvent) => {
-        e.stopPropagation();
-        setshowAccessModal(false);
-    }
-    // TODO: Mobile detection...
+    localStorage.setItem("word_wrap", String(flipped));
+    setSettings("word_wrap", flipped);
+  };
 
-    return (
-        <>
-            {/* Modals */}
-            <SettingsModal showModal={showAccessModal()} title="Accessibility Settings" onOutsideClick={handleOutsideModal} />
+  const handleOutsideModal = (e: MouseEvent) => {
+    e.stopPropagation();
+    setshowAccessModal(false);
+  };
+  // TODO: Mobile detection...
 
-            <nav id="sidebar" classList={{ sideClosed: settings.side_closed }}>
-                <ul>
-                    <li class="sideHeader" classList={{ sideHeaderClosed: settings.side_closed }}>
-                        <Switch>
-                            <Match when={!settings.side_closed}>
-                                <span class="logo">
-                                    <LogoSVG /> MystBin
-                                </span>
-                            </Match>
-                            <Match when={settings.side_closed}>
-                                <span></span>
-                            </Match>
-                        </Switch>
-                        <span class="sideClose" on:click={handleShowSide}><HamburgerMenuSVG /></span>
-                    </li>
+  return (
+    <>
+      {/* Modals */}
+      <SettingsModal
+        showModal={showAccessModal()}
+        title="Accessibility Settings"
+        onOutsideClick={handleOutsideModal}
+      />
 
-                    <li>
-                        <a href="/">
-                            <HomeSVG />
-                            <span classList={{ hide: hideText() }}>Home</span>
-                        </a>
-                    </li>
+      <nav
+        id="sidebar"
+        classList={{
+          sideClosed: settings.side_closed,
+        }}
+      >
+        <ul>
+          <li
+            class="sideHeader"
+            classList={{
+              sideHeaderClosed: settings.side_closed,
+            }}
+          >
+            <Switch>
+              <Match when={!settings.side_closed}>
+                <span class="logo">
+                  <LogoSVG /> MystBin
+                </span>
+              </Match>
+              <Match when={settings.side_closed}>
+                <span></span>
+              </Match>
+            </Switch>
+            <span class="sideClose" on:click={handleShowSide}>
+              <HamburgerMenuSVG />
+            </span>
+          </li>
 
-                    {/* Files Submenu */}
-                    <li class="noBack" classList={{ active: settings.submenu === 1 }}>
-                        <span class="sideButton" on:click={(e) => handleSubMenu(1, e)}>
-                            <FileSVG />
-                            <span classList={{ hide: hideText() }}>Files</span>
-                            <Switch>
-                                <Match when={settings.side_closed}>{null}</Match>
-                                <Match when={settings.submenu === 1}><ChevronDownSVG /></Match>
-                                <Match when={settings.submenu !== 1}><ChevronRightSVG /></Match>
-                            </Switch>
-                        </span>
-                        <ul class={settings.submenu === 1 ? "subMenu showMenu" : "subMenu"}>
-                            <div>
-                                <li>
-                                    <span classList={{ hide: hideText() }}>Tab 1</span>
-                                </li>
-                                <li>
-                                    <span classList={{ hide: hideText() }}>Tab 2</span>
-                                </li>
-                                <li class="active">
-                                    <span classList={{ hide: hideText() }}>Tab 3</span>
-                                </li>
-                                <li>
-                                    <span classList={{ hide: hideText() }}>Tab 4</span>
-                                </li>
-                                <li>
-                                    <span classList={{ hide: hideText() }}>Tab 5</span>
-                                </li>
-                            </div>
-                        </ul>
-                    </li>
+          <li>
+            <a href="/">
+              <HomeSVG />
+              <span
+                classList={{
+                  hide: hideText(),
+                }}
+              >
+                Home
+              </span>
+            </a>
+          </li>
 
-                    {/* Actions Submenu */}
-                    <li class="noBack" classList={{ active: settings.submenu === 2 }}>
-                        <span class="sideButton" on:click={(e) => handleSubMenu(2, e)}>
-                            <ActionsSVG />
-                            <span classList={{ hide: hideText() }}>Manage</span>
-                            <Switch>
-                                <Match when={settings.side_closed}>{null}</Match>
-                                <Match when={settings.submenu === 2}><ChevronDownSVG /></Match>
-                                <Match when={settings.submenu !== 2}><ChevronRightSVG /></Match>
-                            </Switch>
-                        </span>
-                        <ul class={settings.submenu === 2 ? "subMenu showMenu" : "subMenu"}>
-                            <div>
-                                <li>
-                                    <span classList={{ hide: hideText() }}>Tab 1</span>
-                                </li>
-                                <li>
-                                    <span classList={{ hide: hideText() }}>Tab 2</span>
-                                </li>
-                                <li class="active">
-                                    <span classList={{ hide: hideText() }}>Tab 3</span>
-                                </li>
-                                <li>
-                                    <span classList={{ hide: hideText() }}>Tab 4</span>
-                                </li>
-                                <li>
-                                    <span classList={{ hide: hideText() }}>Tab 5</span>
-                                </li>
-                            </div>
-                        </ul>
-                    </li>
+          {/* Files Submenu */}
+          <li
+            class="noBack"
+            classList={{
+              active: settings.submenu === 1,
+            }}
+          >
+            <span class="sideButton" on:click={(e) => handleSubMenu(1, e)}>
+              <FileSVG />
+              <span
+                classList={{
+                  hide: hideText(),
+                }}
+              >
+                Files
+              </span>
+              <Switch>
+                <Match when={settings.side_closed}>{null}</Match>
+                <Match when={settings.submenu === 1}>
+                  <ChevronDownSVG />
+                </Match>
+                <Match when={settings.submenu !== 1}>
+                  <ChevronRightSVG />
+                </Match>
+              </Switch>
+            </span>
+            <ul class={settings.submenu === 1 ? "subMenu showMenu" : "subMenu"}>
+              <div>
+                <li>
+                  <span
+                    classList={{
+                      hide: hideText(),
+                    }}
+                  >
+                    Tab 1
+                  </span>
+                </li>
+                <li>
+                  <span
+                    classList={{
+                      hide: hideText(),
+                    }}
+                  >
+                    Tab 2
+                  </span>
+                </li>
+                <li class="active">
+                  <span
+                    classList={{
+                      hide: hideText(),
+                    }}
+                  >
+                    Tab 3
+                  </span>
+                </li>
+                <li>
+                  <span
+                    classList={{
+                      hide: hideText(),
+                    }}
+                  >
+                    Tab 4
+                  </span>
+                </li>
+                <li>
+                  <span
+                    classList={{
+                      hide: hideText(),
+                    }}
+                  >
+                    Tab 5
+                  </span>
+                </li>
+              </div>
+            </ul>
+          </li>
 
-                    {/* Settings Submenu */}
-                    <li class="noBack" classList={{ active: settings.submenu === 3 }}>
-                        <span class="sideButton" on:click={(e) => handleSubMenu(3, e)}>
-                            <SettingsSVG />
-                            <span classList={{ hide: hideText() }}>Settings</span>
-                            <Switch>
-                                <Match when={settings.side_closed}>{null}</Match>
-                                <Match when={settings.submenu === 3}><ChevronDownSVG /></Match>
-                                <Match when={settings.submenu !== 3}><ChevronRightSVG /></Match>
-                            </Switch>
-                        </span>
-                        <ul class={settings.submenu === 3 ? "subMenu showMenu" : "subMenu"}>
-                            <div>
-                                <li onclick={handleLightModeClick}>
-                                    <span classList={{ hide: hideText() }}><span>Light Theme </span></span>
-                                    <ToggleSwitch checked={settings.is_light} />
-                                </li>
-                                <li onclick={handleLigaturesClick}>
-                                    <span classList={{ hide: hideText() }}><span>Font Ligatures </span></span>
-                                    <ToggleSwitch checked={settings.ligatures} />
-                                </li>
-                                <li onclick={handleLineNumClick}>
-                                    <span classList={{ hide: hideText() }}><span>Show Line Numbers </span></span>
-                                    <ToggleSwitch checked={settings.line_numbers} />
-                                </li>
-                                <li onclick={handleWordWrapClick}>
-                                    <span classList={{ hide: hideText() }}><span>Word Wrap </span></span>
-                                    <ToggleSwitch checked={settings.word_wrap} />
-                                </li>
-                                <li onclick={() => setshowAccessModal(true)}>
-                                    <span classList={{ hide: hideText() }}>Accessibility Menu</span>
-                                    <VerticalEllipsisSVG />
-                                </li>
-                            </div>
-                        </ul>
-                    </li>
-                </ul>
+          {/* Actions Submenu */}
+          <li
+            class="noBack"
+            classList={{
+              active: settings.submenu === 2,
+            }}
+          >
+            <span class="sideButton" on:click={(e) => handleSubMenu(2, e)}>
+              <ActionsSVG />
+              <span
+                classList={{
+                  hide: hideText(),
+                }}
+              >
+                Manage
+              </span>
+              <Switch>
+                <Match when={settings.side_closed}>{null}</Match>
+                <Match when={settings.submenu === 2}>
+                  <ChevronDownSVG />
+                </Match>
+                <Match when={settings.submenu !== 2}>
+                  <ChevronRightSVG />
+                </Match>
+              </Switch>
+            </span>
+            <ul class={settings.submenu === 2 ? "subMenu showMenu" : "subMenu"}>
+              <div>
+                <li>
+                  <span
+                    classList={{
+                      hide: hideText(),
+                    }}
+                  >
+                    Tab 1
+                  </span>
+                </li>
+                <li>
+                  <span
+                    classList={{
+                      hide: hideText(),
+                    }}
+                  >
+                    Tab 2
+                  </span>
+                </li>
+                <li class="active">
+                  <span
+                    classList={{
+                      hide: hideText(),
+                    }}
+                  >
+                    Tab 3
+                  </span>
+                </li>
+                <li>
+                  <span
+                    classList={{
+                      hide: hideText(),
+                    }}
+                  >
+                    Tab 4
+                  </span>
+                </li>
+                <li>
+                  <span
+                    classList={{
+                      hide: hideText(),
+                    }}
+                  >
+                    Tab 5
+                  </span>
+                </li>
+              </div>
+            </ul>
+          </li>
 
-                {/* Sidebar Meta Data */}
-                <div class="meta">
-                    <Suspense fallback={<span class="smallText">...</span>}>
-                        <Switch>
-                            <Match when={apiVersion.error}>
-                                <span class="smallText">...</span>
-                            </Match>
-                            <Match when={apiVersion()}>
-                                <span class="smallText">{apiVersion()}</span>
-                            </Match>
-                        </Switch>
-                    </Suspense>
-                    <Switch>
-                        <Match when={!settings.side_closed}>
-                            <div class="socials">
-                                <a href="https://discord.gg/RAKc3HF" title="Discord"><DiscordSVG /></a>
-                                <a href="https://github.com/PythonistaGuild/mystbin" title="GitHub"><GitHubSVG /></a>
-                                <a href="/" title="Documentation"><MenuBookSVG /></a>
-                                <a href="/" title="Install on VSCode"><VSCodeSVG /></a>
-                            </div>
-                        </Match>
-                        <Match when={settings.side_closed}>
-                            <div class="socials">
-                                <a href="/" title="Documentation"><MenuBookSVG /></a>
-                            </div>
-                        </Match>
-                    </Switch>
-                </div>
-            </nav>
-        </>
-    )
+          {/* Settings Submenu */}
+          <li
+            class="noBack"
+            classList={{
+              active: settings.submenu === 3,
+            }}
+          >
+            <span class="sideButton" on:click={(e) => handleSubMenu(3, e)}>
+              <SettingsSVG />
+              <span
+                classList={{
+                  hide: hideText(),
+                }}
+              >
+                Settings
+              </span>
+              <Switch>
+                <Match when={settings.side_closed}>{null}</Match>
+                <Match when={settings.submenu === 3}>
+                  <ChevronDownSVG />
+                </Match>
+                <Match when={settings.submenu !== 3}>
+                  <ChevronRightSVG />
+                </Match>
+              </Switch>
+            </span>
+            <ul class={settings.submenu === 3 ? "subMenu showMenu" : "subMenu"}>
+              <div>
+                <li onclick={handleLightModeClick}>
+                  <span
+                    classList={{
+                      hide: hideText(),
+                    }}
+                  >
+                    <span>Light Theme </span>
+                  </span>
+                  <ToggleSwitch checked={settings.is_light} />
+                </li>
+                <li onclick={handleLigaturesClick}>
+                  <span
+                    classList={{
+                      hide: hideText(),
+                    }}
+                  >
+                    <span>Font Ligatures </span>
+                  </span>
+                  <ToggleSwitch checked={settings.ligatures} />
+                </li>
+                <li onclick={handleLineNumClick}>
+                  <span
+                    classList={{
+                      hide: hideText(),
+                    }}
+                  >
+                    <span>Show Line Numbers </span>
+                  </span>
+                  <ToggleSwitch checked={settings.line_numbers} />
+                </li>
+                <li onclick={handleWordWrapClick}>
+                  <span
+                    classList={{
+                      hide: hideText(),
+                    }}
+                  >
+                    <span>Word Wrap </span>
+                  </span>
+                  <ToggleSwitch checked={settings.word_wrap} />
+                </li>
+                <li onclick={() => setshowAccessModal(true)}>
+                  <span
+                    classList={{
+                      hide: hideText(),
+                    }}
+                  >
+                    Accessibility Menu
+                  </span>
+                  <VerticalEllipsisSVG />
+                </li>
+              </div>
+            </ul>
+          </li>
+        </ul>
+
+        {/* Sidebar Meta Data */}
+        <div class="meta">
+          <Suspense fallback={<span class="smallText">...</span>}>
+            <Switch>
+              <Match when={apiVersion.error}>
+                <span class="smallText">...</span>
+              </Match>
+              <Match when={apiVersion()}>
+                <span class="smallText">{apiVersion()}</span>
+              </Match>
+            </Switch>
+          </Suspense>
+          <Switch>
+            <Match when={!settings.side_closed}>
+              <div class="socials">
+                <a href="https://discord.gg/RAKc3HF" title="Discord">
+                  <DiscordSVG />
+                </a>
+                <a
+                  href="https://github.com/PythonistaGuild/mystbin"
+                  title="GitHub"
+                >
+                  <GitHubSVG />
+                </a>
+                <a href="/" title="Documentation">
+                  <MenuBookSVG />
+                </a>
+                <a href="/" title="Install on VSCode">
+                  <VSCodeSVG />
+                </a>
+              </div>
+            </Match>
+            <Match when={settings.side_closed}>
+              <div class="socials">
+                <a href="/" title="Documentation">
+                  <MenuBookSVG />
+                </a>
+              </div>
+            </Match>
+          </Switch>
+        </div>
+      </nav>
+    </>
+  );
 }

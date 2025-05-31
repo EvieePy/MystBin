@@ -17,6 +17,7 @@
     "node": ">=22"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.4",
     "sass": "^1.88.0"
   }
 }

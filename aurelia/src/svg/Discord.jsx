@@ -7,5 +7,5 @@ const DiscordSVG = (props) => (
       }}
     />
   </svg>
-)
-export default DiscordSVG
+);
+export default DiscordSVG;

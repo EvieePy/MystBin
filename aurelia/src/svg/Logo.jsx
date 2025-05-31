@@ -22,5 +22,5 @@ const LogoSVG = (props) => (
       </g>
     </g>
   </svg>
-)
-export default LogoSVG
+);
+export default LogoSVG;
