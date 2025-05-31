@@ -1,3 +1,5 @@
+@use "variables" as *;
+
 :root {
   color-scheme: light dark;
 }
@@ -18,6 +20,10 @@
 
 html {
   line-height: 1.5em;
+  min-height: 100vh;
+  min-height: 100dvh;
+  max-width: 100vw;
+  min-width: 100vw;
 }
 
 body {
@@ -25,6 +31,7 @@ body {
   min-height: 100vh;
   min-height: 100dvh;
   max-width: 100vw;
+  min-width: 100vw;
   overflow-x: hidden;
   grid-template-columns: auto 1fr;
 
@@ -310,9 +317,9 @@ main {
 }
 
 // Settings Modal
-.modalOpen {
-  overflow: hidden;
-}
+// .modalOpen {
+//   overflow: hidden;
+// }
 
 .outerModal {
   width: 100%;
@@ -321,6 +328,10 @@ main {
   overflow: hidden;
   z-index: 998;
   background-color: var(--primary-modal);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 .dialogContainer {
@@ -349,4 +360,71 @@ main {
 .innerModal .title {
   font-weight: 600;
   font-size: 1.4em;
+}
+
+// Save Button
+
+.saveContainer {
+  background-color: var(--primary-tint);
+  position: fixed;
+  z-index: 1;
+  display: flex;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  user-select: none;
+  border: 1px solid var(--primary-tint-3--10);
+  border-radius: 0.5em;
+  margin: 0 auto 2rem auto;
+  min-width: 8rem;
+  max-width: 8rem;
+  gap: 0;
+}
+
+.saveButton {
+  display: flex;
+  background-color: var(--primary-tint);
+  color: var(--save-color);
+  border-radius: 0.5em 0 0 0.5em;
+  align-content: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.9em;
+  padding: 0.5em 1em;
+}
+
+.saveButton:hover {
+  cursor: pointer;
+  filter: brightness(1.1);
+}
+
+.saveButton:active {
+  transform: scale(.99);
+}
+
+.saveSettings {
+  display: flex;
+  border-left: 1px solid var(--primary-tint-3--30);
+  border-radius: 0 0.5em 0.5em 0;
+  align-content: center;
+  z-index: 2;
+  background-color: var(--primary-tint);
+  flex-grow: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+.saveSettings svg {
+  color: var(--save-color);
+  height: 1.3em;
+  width: auto;
+}
+
+.saveSettings:hover {
+  filter: brightness(1.1);
+  cursor: pointer;
+}
+
+.saveSettings:active {
+  transform: scale(.95);
 }
