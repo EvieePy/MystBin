@@ -1,4 +1,7 @@
 {
     "biome.requireConfiguration": true,
-    "editor.defaultFormatter": "biomejs.biome"
+    "editor.defaultFormatter": "biomejs.biome",
+    "[scss]": {
+        "editor.defaultFormatter": "vscode.css-language-features"
+    }
 }
