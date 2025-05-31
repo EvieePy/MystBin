@@ -17,6 +17,13 @@ function updateThemeOnHtmlEl({ theme }) {
     document.querySelector("html").setAttribute("data-theme", theme);
 }
 
+// function updateSidebar() {
+//     const side_closed = localStorage.getItem("side_closed") === "true";
+//     if (!side_closed) { return }
+
+//     document.getElementById("sidebar").classList.add("sideClosed")
+// }
+
 let localStorageTheme = localStorage.getItem("theme");
 let systemSettingDark = window.matchMedia("(prefers-color-scheme: dark)");
 

@@ -1,4 +1,4 @@
-import { createSignal, createEffect, Match, Switch, Suspense, createResource, onMount } from "solid-js";
+import { createSignal, createEffect, Match, Switch, Suspense, createResource, onMount, on } from "solid-js";
 import ChevronRightSVG from "~/svg/ChevronRight";
 import ChevronDownSVG from "~/svg/ChevronDown";
 import HamburgerMenuSVG from "~/svg/HamburgerMenu";
@@ -12,10 +12,9 @@ import LogoSVG from "~/svg/Logo";
 import ToggleSwitch from "./toggle";
 import VerticalEllipsisSVG from "~/svg/VerticalEllipsis";
 import SettingsModal from "./settingsModal";
-
-const HomeSvg = <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M160-120v-480l320-240 320 240v480H560v-280H400v280H160Z" /></svg>
-const FileSvg = <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M320-240h320v-80H320v80Zm0-160h320v-80H320v80ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520h200L520-800v200Z" /></svg>
-
+import { useSettingsContext } from "~/stores/settings";
+import HomeSVG from "~/svg/Home";
+import FileSVG from "~/svg/File";
 
 const fetchApiVersion = async () => {
     let resp: Response;
@@ -34,26 +33,25 @@ const fetchApiVersion = async () => {
 
 
 export default function SideBar() {
-    const [lightModeToggle, setLightModeToggle] = createSignal(false);
-    const [ligaturesToggle, setLigaturesToggle] = createSignal(false);
-
-    const [showSubMenu, setSubMenu] = createSignal(0);
-    const [showSideBar, setShowSideBar] = createSignal(false);
-    const [showAccessModal, setshowAccessModal] = createSignal(false);
+    const [settings, setSettings] = useSettingsContext();
     const [hideText, setHideText] = createSignal(true);
+
+    const [showAccessModal, setshowAccessModal] = createSignal(false);
     const [apiVersion] = createResource(fetchApiVersion);
 
     onMount(() => {
-        const localTheme = localStorage.getItem("theme");
+        const localTheme = localStorage.getItem("theme") as "light" | "dark";
         const systemSettingDark = window.matchMedia("(prefers-color-scheme: dark)")?.matches ? false : true;
-        setLightModeToggle(localTheme ? localTheme === "light" : systemSettingDark);
+        const side_closed = localStorage.getItem("side_closed") === "true";
 
-        const ligatures = localStorage.getItem("ligatures");
-        setLigaturesToggle(ligatures === "true");
+        setSettings("is_light", localTheme ? localTheme === "light" : systemSettingDark);
+        setSettings("theme", localTheme ? localTheme : systemSettingDark === true ? "dark" : "light");
+        setSettings("side_closed", side_closed);
     });
 
+    // FIXME: Starting in a closed state and opening quickly causes a bug!
     createEffect(() => {
-        if (!showSideBar()) {
+        if (settings.side_closed) {
             setTimeout(() => setHideText(true), 500);
         } else {
             setHideText(false);
@@ -63,41 +61,45 @@ export default function SideBar() {
     const handleSubMenu = (data: number, e: MouseEvent) => {
         e.preventDefault();
 
-        if (data === showSubMenu()) {
-            setSubMenu(0);
+        if (data === settings.submenu) {
+            setSettings("submenu", 0);
+            localStorage.setItem("submenu", "0");
             return;
         }
 
-        setShowSideBar(true);
-        setSubMenu(data);
+        setSettings("side_closed", false);
+        setSettings("submenu", data);
+        localStorage.setItem("submenu", String(data));
     }
 
     const handleShowSide = () => {
-        if (showSideBar() === true) {
-            setSubMenu(0);
+        if (settings.side_closed === false) {
+            setSettings("submenu", 0);
+            localStorage.setItem("submenu", "0");
         }
 
-        setShowSideBar(!showSideBar());
+        localStorage.setItem("side_closed", String(!settings.side_closed));
+        setSettings("side_closed", !settings.side_closed);
     }
 
     const handleLightModeClick = (e: MouseEvent) => {
         e.preventDefault();
 
-        const flipped = !lightModeToggle();
+        const flipped = !settings.is_light;
         const theme = flipped ? "light" : "dark";
 
         localStorage.setItem("theme", theme);
         document.querySelector("html")!.setAttribute("data-theme", theme);
-        setLightModeToggle(flipped);
+        setSettings("is_light", flipped);
     }
 
     const handleLigaturesClick = (e: MouseEvent) => {
         e.preventDefault();
 
-        const flipped = !ligaturesToggle();
+        const flipped = !settings.ligatures;
 
         localStorage.setItem("ligatures", String(flipped));
-        setLigaturesToggle(flipped);
+        setSettings("ligatures", flipped);
     }
 
     const handleOutsideModal = (e: MouseEvent) => {
@@ -111,16 +113,16 @@ export default function SideBar() {
             {/* Modals */}
             <SettingsModal showModal={showAccessModal()} title="Accessibility Settings" onOutsideClick={handleOutsideModal} />
 
-            <nav id="sidebar" classList={{ sideClosed: !showSideBar() }}>
+            <nav id="sidebar" classList={{ sideClosed: settings.side_closed }}>
                 <ul>
-                    <li class="sideHeader" classList={{ sideHeaderClosed: !showSideBar() }}>
+                    <li class="sideHeader" classList={{ sideHeaderClosed: settings.side_closed }}>
                         <Switch>
-                            <Match when={showSideBar()}>
+                            <Match when={!settings.side_closed}>
                                 <span class="logo">
                                     <LogoSVG /> MystBin
                                 </span>
                             </Match>
-                            <Match when={!showSideBar()}>
+                            <Match when={settings.side_closed}>
                                 <span></span>
                             </Match>
                         </Switch>
@@ -129,23 +131,23 @@ export default function SideBar() {
 
                     <li>
                         <a href="/">
-                            {HomeSvg}
+                            <HomeSVG />
                             <span classList={{ hide: hideText() }}>Home</span>
                         </a>
                     </li>
 
                     {/* Files Submenu */}
-                    <li class="noBack" classList={{ active: showSubMenu() === 1 }}>
+                    <li class="noBack" classList={{ active: settings.submenu === 1 }}>
                         <span class="sideButton" on:click={(e) => handleSubMenu(1, e)}>
-                            {FileSvg}
+                            <FileSVG />
                             <span classList={{ hide: hideText() }}>Files</span>
                             <Switch>
-                                <Match when={!showSideBar()}>{null}</Match>
-                                <Match when={showSubMenu() === 1}><ChevronDownSVG /></Match>
-                                <Match when={showSubMenu() !== 1}><ChevronRightSVG /></Match>
+                                <Match when={settings.side_closed}>{null}</Match>
+                                <Match when={settings.submenu === 1}><ChevronDownSVG /></Match>
+                                <Match when={settings.submenu !== 1}><ChevronRightSVG /></Match>
                             </Switch>
                         </span>
-                        <ul class={showSubMenu() === 1 ? "subMenu showMenu" : "subMenu"}>
+                        <ul class={settings.submenu === 1 ? "subMenu showMenu" : "subMenu"}>
                             <div>
                                 <li>
                                     <span classList={{ hide: hideText() }}>Tab 1</span>
@@ -167,17 +169,17 @@ export default function SideBar() {
                     </li>
 
                     {/* Actions Submenu */}
-                    <li class="noBack" classList={{ active: showSubMenu() === 2 }}>
+                    <li class="noBack" classList={{ active: settings.submenu === 2 }}>
                         <span class="sideButton" on:click={(e) => handleSubMenu(2, e)}>
                             <ActionsSVG />
                             <span classList={{ hide: hideText() }}>Manage</span>
                             <Switch>
-                                <Match when={!showSideBar()}>{null}</Match>
-                                <Match when={showSubMenu() === 2}><ChevronDownSVG /></Match>
-                                <Match when={showSubMenu() !== 2}><ChevronRightSVG /></Match>
+                                <Match when={settings.side_closed}>{null}</Match>
+                                <Match when={settings.submenu === 2}><ChevronDownSVG /></Match>
+                                <Match when={settings.submenu !== 2}><ChevronRightSVG /></Match>
                             </Switch>
                         </span>
-                        <ul class={showSubMenu() === 2 ? "subMenu showMenu" : "subMenu"}>
+                        <ul class={settings.submenu === 2 ? "subMenu showMenu" : "subMenu"}>
                             <div>
                                 <li>
                                     <span classList={{ hide: hideText() }}>Tab 1</span>
@@ -199,25 +201,25 @@ export default function SideBar() {
                     </li>
 
                     {/* Settings Submenu */}
-                    <li class="noBack" classList={{ active: showSubMenu() === 3 }}>
+                    <li class="noBack" classList={{ active: settings.submenu === 3 }}>
                         <span class="sideButton" on:click={(e) => handleSubMenu(3, e)}>
                             <SettingsSVG />
                             <span classList={{ hide: hideText() }}>Settings</span>
                             <Switch>
-                                <Match when={!showSideBar()}>{null}</Match>
-                                <Match when={showSubMenu() === 3}><ChevronDownSVG /></Match>
-                                <Match when={showSubMenu() !== 3}><ChevronRightSVG /></Match>
+                                <Match when={settings.side_closed}>{null}</Match>
+                                <Match when={settings.submenu === 3}><ChevronDownSVG /></Match>
+                                <Match when={settings.submenu !== 3}><ChevronRightSVG /></Match>
                             </Switch>
                         </span>
-                        <ul class={showSubMenu() === 3 ? "subMenu showMenu" : "subMenu"}>
+                        <ul class={settings.submenu === 3 ? "subMenu showMenu" : "subMenu"}>
                             <div>
                                 <li onclick={handleLightModeClick}>
                                     <span classList={{ hide: hideText() }}><span>Light Theme </span></span>
-                                    <ToggleSwitch checked={lightModeToggle()} />
+                                    <ToggleSwitch checked={settings.is_light} />
                                 </li>
                                 <li onclick={handleLigaturesClick}>
                                     <span classList={{ hide: hideText() }}><span>Font Ligatures </span></span>
-                                    <ToggleSwitch checked={ligaturesToggle()} />
+                                    <ToggleSwitch checked={settings.ligatures} />
                                 </li>
                                 <li onclick={() => setshowAccessModal(true)}>
                                     <span classList={{ hide: hideText() }}>Accessibility Menu</span>
@@ -241,7 +243,7 @@ export default function SideBar() {
                         </Switch>
                     </Suspense>
                     <Switch>
-                        <Match when={showSideBar()}>
+                        <Match when={!settings.side_closed}>
                             <div class="socials">
                                 <a href="https://discord.gg/RAKc3HF" title="Discord"><DiscordSVG /></a>
                                 <a href="https://github.com/PythonistaGuild/mystbin" title="GitHub"><GitHubSVG /></a>
@@ -249,7 +251,7 @@ export default function SideBar() {
                                 <a href="/" title="Install on VSCode"><VSCodeSVG /></a>
                             </div>
                         </Match>
-                        <Match when={!showSideBar()}>
+                        <Match when={settings.side_closed}>
                             <div class="socials">
                                 <a href="/" title="Documentation"><MenuBookSVG /></a>
                             </div>
