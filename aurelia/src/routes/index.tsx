@@ -1,5 +1,10 @@
+import SaveButton from "~/components/saveButton"
+
 export default function Index() {
     return (
+        <>
+        <SaveButton />
+        
         <main>
             Hello World!<br />
             Hello World!<br />
@@ -123,5 +128,6 @@ export default function Index() {
             Hello World!<br />
 
         </main>
+        </>
     )
 }
