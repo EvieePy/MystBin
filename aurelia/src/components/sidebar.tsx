@@ -1,4 +1,4 @@
-import { createSignal, createEffect, Match, Switch, Suspense, createResource, onMount, on } from "solid-js";
+import { createSignal, createEffect, Match, Switch, Suspense, createResource, onMount, createRenderEffect } from "solid-js";
 import ChevronRightSVG from "~/svg/ChevronRight";
 import ChevronDownSVG from "~/svg/ChevronDown";
 import HamburgerMenuSVG from "~/svg/HamburgerMenu";
@@ -15,6 +15,7 @@ import SettingsModal from "./settingsModal";
 import { useSettingsContext } from "~/stores/settings";
 import HomeSVG from "~/svg/Home";
 import FileSVG from "~/svg/File";
+import { createServerCookie } from "@solid-primitives/cookies";
 
 const fetchApiVersion = async () => {
   let resp: Response;
@@ -35,20 +36,24 @@ const fetchApiVersion = async () => {
 
 export default function SideBar() {
   const [settings, setSettings] = useSettingsContext();
+  const [asideClosedCookie, setAsideClosedCookie] = createServerCookie("asideClosed");
+
   const [hideText, setHideText] = createSignal(true);
+  const [asideClosed, setAsideClosed] = createSignal();
 
   const [showAccessModal, setshowAccessModal] = createSignal(false);
   const [apiVersion] = createResource(fetchApiVersion);
+
+  createRenderEffect(() => {
+    setAsideClosed(asideClosedCookie() === "true");
+  });
 
   onMount(() => {
     const localTheme = localStorage.getItem("theme") as "light" | "dark";
     const systemSettingDark = !window.matchMedia("(prefers-color-scheme: dark)")?.matches;
 
-    const side_closed = localStorage.getItem("side_closed") === "true";
-
     setSettings("is_light", localTheme ? localTheme === "light" : systemSettingDark);
     setSettings("theme", localTheme || (systemSettingDark ? "dark" : "light"));
-    setSettings("side_closed", side_closed);
   });
 
   let hideTextTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -58,7 +63,7 @@ export default function SideBar() {
       clearTimeout(hideTextTimeout);
       hideTextTimeout = null;
     }
-    if (settings.side_closed) {
+    if (Boolean(asideClosed())) {
       hideTextTimeout = setTimeout(() => setHideText(true), 500);
     } else {
       setHideText(false);
@@ -74,24 +79,23 @@ export default function SideBar() {
       return;
     }
 
-    if (settings.side_closed) {
+    if (Boolean(asideClosed())) {
       setTimeout(() => setSettings("submenu", data), 500);
     } else {
       setSettings("submenu", data);
     }
 
-    setSettings("side_closed", false);
+    setAsideClosedCookie("false");
     localStorage.setItem("submenu", String(data));
   };
 
   const handleShowSide = () => {
-    if (settings.side_closed === false) {
+    if (asideClosed() === false) {
       setSettings("submenu", 0);
       localStorage.setItem("submenu", "0");
     }
 
-    localStorage.setItem("side_closed", String(!settings.side_closed));
-    setSettings("side_closed", !settings.side_closed);
+    setAsideClosedCookie(String(!asideClosed()));
   };
 
   const handleLightModeClick = (e: MouseEvent) => {
@@ -141,8 +145,7 @@ export default function SideBar() {
   return (
     <>
       {/* Modals */}
-      <SettingsModal showModal={showAccessModal()} title="Accessibility Settings" onOutsideClick={handleOutsideModal} >
-
+      <SettingsModal showModal={showAccessModal()} title="Accessibility Settings" onOutsideClick={handleOutsideModal}>
         <span class="settingsHeader">Colour Accessibility</span>
         <span class="settingsDesc">Settings to help with various colour deficiencies and colour blindness.</span>
 
@@ -240,16 +243,16 @@ export default function SideBar() {
         </div>
       </SettingsModal>
 
-      <nav id="sidebar" classList={{ sideClosed: settings.side_closed }}>
+      <nav id="sidebar" classList={{ sideClosed: Boolean(asideClosed()) }}>
         <ul>
-          <li class="sideHeader" classList={{ sideHeaderClosed: settings.side_closed }}>
+          <li class="sideHeader" classList={{ sideHeaderClosed: Boolean(asideClosed()) }}>
             <Switch>
-              <Match when={!settings.side_closed}>
+              <Match when={!Boolean(asideClosed())}>
                 <span class="logo">
                   <LogoSVG /> MystBin
                 </span>
               </Match>
-              <Match when={settings.side_closed}>
+              <Match when={Boolean(asideClosed())}>
                 <span></span>
               </Match>
             </Switch>
@@ -271,7 +274,7 @@ export default function SideBar() {
               <FileSVG />
               <span classList={{ hide: hideText() }}>Files</span>
               <Switch>
-                <Match when={settings.side_closed}>{null}</Match>
+                <Match when={Boolean(asideClosed())}>{null}</Match>
                 <Match when={settings.submenu === 1}>
                   <ChevronDownSVG />
                 </Match>
@@ -307,7 +310,7 @@ export default function SideBar() {
               <ActionsSVG />
               <span classList={{ hide: hideText() }}>Manage</span>
               <Switch>
-                <Match when={settings.side_closed}>{null}</Match>
+                <Match when={Boolean(asideClosed())}>{null}</Match>
                 <Match when={settings.submenu === 2}>
                   <ChevronDownSVG />
                 </Match>
@@ -343,7 +346,7 @@ export default function SideBar() {
               <SettingsSVG />
               <span classList={{ hide: hideText() }}>Settings</span>
               <Switch>
-                <Match when={settings.side_closed}>{null}</Match>
+                <Match when={Boolean(asideClosed())}>{null}</Match>
                 <Match when={settings.submenu === 3}>
                   <ChevronDownSVG />
                 </Match>
@@ -400,7 +403,7 @@ export default function SideBar() {
             </Switch>
           </Suspense>
           <Switch>
-            <Match when={!settings.side_closed}>
+            <Match when={!Boolean(asideClosed())}>
               <div class="socials">
                 <a href="https://discord.gg/RAKc3HF" title="Discord">
                   <DiscordSVG />
@@ -416,7 +419,7 @@ export default function SideBar() {
                 </a>
               </div>
             </Match>
-            <Match when={settings.side_closed}>
+            <Match when={Boolean(asideClosed())}>
               <div class="socials">
                 <a href="/" title="Documentation">
                   <MenuBookSVG />

@@ -13,6 +13,5 @@ type SettingsT = {
   colour_mode: "default" | "deuteranopia" | "protanopia" | "tritanopia";
 
   // Sidebar State
-  side_closed: boolean;
   submenu: number;
 };
