@@ -38,8 +38,10 @@ export default function SideBar() {
   const [settings, setSettings] = useSettingsContext();
   const [asideClosedCookie, setAsideClosedCookie] = createServerCookie("asideClosed");
 
-  const [hideText, setHideText] = createSignal(true);
-  const [asideClosed, setAsideClosed] = createSignal();
+  const initialAsideClosed = asideClosedCookie() === "true";
+  const [asideClosed, setAsideClosed] = createSignal(initialAsideClosed);
+
+  const [hideText, setHideText] = createSignal(initialAsideClosed);
 
   const [showAccessModal, setshowAccessModal] = createSignal(false);
   const [apiVersion] = createResource(fetchApiVersion);
