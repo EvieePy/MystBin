@@ -4,7 +4,7 @@ interface PasteResponse {
   expires_at: string | null;
   views: number;
   max_views: number | null;
-  files: FileResponse;
+  files: FileResponse[];
   security: string | null;
 }
 
