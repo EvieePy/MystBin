@@ -66,7 +66,7 @@ export default function SideBar() {
       hideTextTimeout = null;
     }
     if (Boolean(asideClosed())) {
-      hideTextTimeout = setTimeout(() => setHideText(true), 500);
+      hideTextTimeout = setTimeout(() => setHideText(true), 350);
     } else {
       setHideText(false);
     }
@@ -82,7 +82,7 @@ export default function SideBar() {
     }
 
     if (Boolean(asideClosed())) {
-      setTimeout(() => setSettings("submenu", data), 500);
+      setTimeout(() => setSettings("submenu", data), 350);
     } else {
       setSettings("submenu", data);
     }
@@ -307,7 +307,7 @@ export default function SideBar() {
           </li>
 
           {/* Actions Submenu */}
-          <li class="noBack" classList={{ active: settings.submenu === 2 }}>
+          {/* <li class="noBack" classList={{ active: settings.submenu === 2 }}>
             <span class="sideButton" on:click={(e) => handleSubMenu(2, e)}>
               <ActionsSVG />
               <span classList={{ hide: hideText() }}>Manage</span>
@@ -340,7 +340,7 @@ export default function SideBar() {
                 </li>
               </div>
             </ul>
-          </li>
+          </li> */}
 
           {/* Settings Submenu */}
           <li class="noBack" classList={{ active: settings.submenu === 3 }}>
