@@ -1,5 +1,7 @@
-import Editor from "~/components/editor";
+import { clientOnly } from "@solidjs/start";
 import SaveButton from "~/components/saveButton";
+
+const Editor = clientOnly(() => import("~/components/editor"));
 
 export default function Index() {
   return (
