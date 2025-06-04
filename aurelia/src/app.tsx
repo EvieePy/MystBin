@@ -4,6 +4,7 @@ import { FileRoutes } from "@solidjs/start/router";
 
 import SideBar from "./components/sidebar";
 import "./css/app.scss";
+import "./css/editor.scss";
 import { MetaProvider } from "@solidjs/meta";
 import { PasteProvider } from "./stores/paste";
 import { SettingsProvider, useSettingsContext } from "./stores/settings";
