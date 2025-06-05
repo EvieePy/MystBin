@@ -19,7 +19,9 @@ export default function SaveButton() {
 
   return (
     <div class="saveContainer">
-      <SettingsModal showModal={showModal()} title="Save Options" onOutsideClick={handleSettingsModal} />
+      <SettingsModal showModal={showModal()} title="Save Options" onOutsideClick={handleSettingsModal}>
+        sdsd
+      </SettingsModal>
 
       <div class="saveButton">Save Paste</div>
       <div class="saveSettings" onclick={() => setShowModal(true)}>

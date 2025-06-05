@@ -6,7 +6,6 @@ import DiscordSVG from "~/svg/Discord";
 import GitHubSVG from "~/svg/GitHub";
 import MenuBookSVG from "~/svg/MenuBook";
 import VSCodeSVG from "~/svg/VSCode";
-import ActionsSVG from "~/svg/Actions";
 import SettingsSVG from "~/svg/Settings";
 import LogoSVG from "~/svg/Logo";
 import ToggleSwitch from "./toggle";
@@ -16,6 +15,7 @@ import { useSettingsContext } from "~/stores/settings";
 import HomeSVG from "~/svg/Home";
 import FileSVG from "~/svg/File";
 import { createServerCookie } from "@solid-primitives/cookies";
+import HelpSVG from "~/svg/Help";
 
 const fetchApiVersion = async () => {
   let resp: Response;
@@ -53,9 +53,11 @@ export default function SideBar() {
   onMount(() => {
     const localTheme = localStorage.getItem("theme") as "light" | "dark";
     const systemSettingDark = !window.matchMedia("(prefers-color-scheme: dark)")?.matches;
+    const colourMode = localStorage.getItem("colour_mode") as CBModes;
 
     setSettings("is_light", localTheme ? localTheme === "light" : systemSettingDark);
     setSettings("theme", localTheme || (systemSettingDark ? "dark" : "light"));
+    setSettings("colour_mode", colourMode || "default");
   });
 
   let hideTextTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -142,6 +144,12 @@ export default function SideBar() {
     e.stopPropagation();
     setshowAccessModal(false);
   };
+
+  const handleColourBlindMode = (value: CBModes) => {
+    localStorage.setItem("colour_mode", value);
+    setSettings("colour_mode", value);
+  };
+
   // TODO: Mobile detection...
 
   return (
@@ -152,7 +160,11 @@ export default function SideBar() {
         <span class="settingsDesc">Settings to help with various colour deficiencies and colour blindness.</span>
 
         <div class="colourBlindGrid">
-          <div class="colourBlindContainer">
+          <div
+            class="colourBlindContainer"
+            classList={{ activeSetting: settings.colour_mode === "default" }}
+            onclick={() => handleColourBlindMode("default")}
+          >
             <div class="colourBlindInner">
               <div class="colourBlindTitle">Default</div>
 
@@ -175,7 +187,11 @@ export default function SideBar() {
             </div>
           </div>
 
-          <div class="colourBlindContainer">
+          <div
+            class="colourBlindContainer"
+            classList={{ activeSetting: settings.colour_mode === "deuteranopia" }}
+            onclick={() => handleColourBlindMode("deuteranopia")}
+          >
             <div class="colourBlindInner">
               <div class="colourBlindTitle">Deuteranopia</div>
 
@@ -198,7 +214,11 @@ export default function SideBar() {
             </div>
           </div>
 
-          <div class="colourBlindContainer">
+          <div
+            class="colourBlindContainer"
+            classList={{ activeSetting: settings.colour_mode === "protanopia" }}
+            onclick={() => handleColourBlindMode("protanopia")}
+          >
             <div class="colourBlindInner">
               <div class="colourBlindTitle">Protanopia</div>
 
@@ -220,7 +240,11 @@ export default function SideBar() {
               </div>
             </div>
           </div>
-          <div class="colourBlindContainer">
+          <div
+            class="colourBlindContainer"
+            classList={{ activeSetting: settings.colour_mode === "tritanopia" }}
+            onclick={() => handleColourBlindMode("tritanopia")}
+          >
             <div class="colourBlindInner">
               <div class="colourBlindTitle">Tritanopia</div>
 
@@ -359,30 +383,38 @@ export default function SideBar() {
             </span>
             <ul class={settings.submenu === 3 ? "subMenu showMenu" : "subMenu"}>
               <div>
+                {/* THEME TOGGLE */}
                 <li onclick={handleLightModeClick}>
                   <span classList={{ hide: hideText() }}>
                     <span>Light Theme </span>
                   </span>
                   <ToggleSwitch checked={settings.is_light} />
                 </li>
+                {/* LIGATURES TOGGLE */}
                 <li onclick={handleLigaturesClick}>
                   <span classList={{ hide: hideText() }}>
                     <span>Font Ligatures </span>
                   </span>
                   <ToggleSwitch checked={settings.ligatures} />
                 </li>
+                {/* LINE-NUMBER TOGGLE */}
                 <li onclick={handleLineNumClick}>
                   <span classList={{ hide: hideText() }}>
                     <span>Show Line Numbers </span>
                   </span>
                   <ToggleSwitch checked={settings.line_numbers} />
                 </li>
+                {/* WORD WRAP TOGGLE */}
                 <li onclick={handleWordWrapClick}>
-                  <span classList={{ hide: hideText() }}>
+                  <span classList={{ hide: hideText() }} class="toggleSetting">
                     <span>Word Wrap </span>
+                    <div data-tooltip="Note: This setting will disable indent guidelines.">
+                      <HelpSVG />
+                    </div>
                   </span>
                   <ToggleSwitch checked={settings.word_wrap} />
                 </li>
+                {/* ACCESSIBILITY MENU */}
                 <li onclick={() => setshowAccessModal(true)}>
                   <span classList={{ hide: hideText() }}>Accessibility Menu</span>
                   <VerticalEllipsisSVG />
