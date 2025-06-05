@@ -480,6 +480,16 @@ main {
   width: 18rem;
 }
 
+.colourBlindContainer.activeSetting {
+  box-shadow: 0 0 0 2px var(--primary-tint) !important;
+}
+
+.colourBlindContainer:hover {
+  box-shadow: 0 0 0 2px var(--primary-tint-3--70);
+  cursor: pointer;
+}
+
+
 .colourBlindInner {
   display: flex;
   flex-direction: column;
@@ -513,6 +523,7 @@ main {
   gap: 1rem;
   align-items: center;
   justify-content: center;
+  border-radius: 0 0 0 0.5em;
 }
 
 .colourBlindPreview>.colourBlindSide div {
@@ -559,7 +570,7 @@ main {
   display: flex;
   align-content: center;
   gap: 0.25em;
-  
+
   svg {
     width: 1.5em;
     height: auto;
@@ -603,7 +614,7 @@ main {
   color: var(--meta-button-color);
 }
 
-.metaButtons span > svg {
+.metaButtons span>svg {
   width: 1.7em;
   height: auto;
 }
@@ -618,5 +629,53 @@ main {
 }
 
 .report {
-  background-color: var(--report-color)!important;
+  background-color: var(--report-color) !important;
+}
+
+/// Settings Toggle Container
+.toggleSetting {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+
+  div {
+    display: flex;
+    align-content: center;
+  }
+
+  div>svg {
+    width: 1.3em;
+    height: auto;
+    position: relative;
+  }
+
+  div>svg:hover {
+    filter: brightness(105);
+    cursor: help;
+  }
+}
+
+.toggleSetting>div:after {
+  display: none;
+  --tooltipScale: 0;
+  position: absolute;
+  content: attr(data-tooltip);
+  left: 0;
+  right: 0;
+  transform: scale(var(--tooltipScale));
+  transform-origin: bottom left;
+  padding: 1em;
+  text-align: center;
+  background-color: var(--primary-bg);
+  z-index: 2;
+  border-radius: 0.5em;
+  margin-inline: auto;
+  max-width: 80%;
+}
+
+.toggleSetting>div:hover:after {
+  display: block;
+  --tooltipScale: 1;
+  transform: translateY(30%);
+  cursor: help;
 }
