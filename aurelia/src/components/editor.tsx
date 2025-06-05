@@ -7,6 +7,7 @@ import "solid-prism-editor/languages/jsx";
 import "solid-prism-editor/layout.css";
 import "solid-prism-editor/themes/github-dark.css";
 import "solid-prism-editor/search.css";
+import { useSettingsContext } from "~/stores/settings";
 
 interface Props {
   initialValue?: string;
@@ -14,5 +15,7 @@ interface Props {
 }
 
 export default (props: Props) => {
-  return <Editor language="jsx" value={props.initialValue} readOnly={props.readOnly} extensions={basicSetup} />;
+    const [settings, setSettings] = useSettingsContext();
+    
+  return <Editor class={settings.ligatures ? "ligatures" : ""} language="jsx" value={props.initialValue} readOnly={props.readOnly} extensions={basicSetup} />;
 };
