@@ -1,11 +1,68 @@
 .prism-code-editor {
     background-color: var(--primary-bg)!important;
+    color: #d7d7df!important;
     font-family: "JetBrains Mono", monospace!important;
     font-variant-ligatures: none;
     font-size: 0.8em;
     font-weight: 300!important;
 }
 
+.guide-indents div{
+    background-color: #c9c9d10e!important;
+}
+
 .ligatures {
     font-variant-ligatures: common-ligatures!important;
+}
+
+.keyword-import {
+    color: #c678dd!important;
+}
+
+.maybe-class-name {
+    color: #6cb4ed!important;
+}
+
+.string {
+    color: #8ca878!important;
+}
+
+.keyword-from {
+    color: #c678dd!important;
+}
+
+.keyword-const {
+    color: #c678dd!important;
+}
+
+.function {
+    color: #61aeee!important;
+}
+
+.keyword-async {
+    color: #c678dd!important;
+}
+
+.keyword-let {
+    color: #c678dd!important;
+}
+
+.keyword-await {
+    color: #d6c460!important;
+}
+
+.keyword-return {
+    color: #c678dd!important;
+}
+
+.keyword-if {
+color: #c678dd!important;
+}
+
+.keyword-else {
+color: #c678dd!important;
+}
+
+.keyword-function {
+
 }
