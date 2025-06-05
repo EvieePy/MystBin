@@ -15,3 +15,5 @@ type SettingsT = {
   // Sidebar State
   submenu: number;
 };
+
+type CBModes = "default" | "deuteranopia" | "protanopia" | "tritanopia";
