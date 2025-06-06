@@ -5,6 +5,7 @@
     font-variant-ligatures: none;
     font-size: 0.8em;
     font-weight: 300!important;
+    height: 100%;
 }
 
 .guide-indents div{
@@ -16,7 +17,7 @@
 }
 
 .keyword-import {
-    color: #c678dd!important;
+    color: #c6a3f0!important;
 }
 
 .maybe-class-name {
@@ -24,7 +25,7 @@
 }
 
 .string {
-    color: #8ca878!important;
+    color: #77cf91!important;
 }
 
 .keyword-from {
@@ -65,4 +66,36 @@ color: #c678dd!important;
 
 .keyword-function {
 
+}
+
+.keyword-as {
+    color: #c6a3f0!important
+}
+
+.keyword {
+    color: #c6a3f0!important
+}
+
+.token.tag {
+    color: #d7d7df!important;
+}
+
+.token.attr-name {
+    color: #eea472!important;
+}
+
+.token.attr-value {
+    color: #77cf91!important;
+}
+
+.token.boolean {
+    color: #ff9d65!important;
+}
+
+.token.decorator {
+    color: #d6c460!important;
+}
+
+.token.comment {
+    color: #d7d7df49!important;
 }

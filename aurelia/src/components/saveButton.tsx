@@ -8,12 +8,17 @@ interface Props {
 }
 
 export default function SaveButton() {
+  const [paste, setPaste] = usePasteContext();
   const [showModal, setShowModal] = createSignal(false);
 
   const handleSettingsModal = (e: MouseEvent) => {
     e.stopPropagation();
     setShowModal(false);
   };
+
+  const handleSave = () => {
+    console.log(paste.files);
+  }
 
   const [pasteStore, setPasteStore] = usePasteContext();
 
@@ -23,7 +28,7 @@ export default function SaveButton() {
         sdsd
       </SettingsModal>
 
-      <div class="saveButton">Save Paste</div>
+      <div class="saveButton" onclick={handleSave}>Save Paste</div>
       <div class="saveSettings" onclick={() => setShowModal(true)}>
         <SettingsSVG />
       </div>

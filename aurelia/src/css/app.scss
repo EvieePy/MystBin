@@ -334,8 +334,9 @@ main {
   // border: var(--primary-border);
   // margin: 1rem;
   // border-radius: 0.5em;
+  display: flex;
+  flex-direction: column;
   height: 100vh;
-  overflow: auto;
 }
 
 // Settings Modal
@@ -678,4 +679,47 @@ main {
   --tooltipScale: 1;
   transform: translateY(30%);
   cursor: help;
+}
+
+// MystBin Annotations
+.annotation {
+  background-color: var(--report-color);
+  position: relative;
+  z-index: 999;
+}
+
+.pce-line.annotation::before {
+  background-color: var(--report-color);
+}
+
+.pce-line.annotation:after {
+  display: none;
+  --tooltipScale: 0;
+  position: fixed;
+  content: attr(data-tooltip)!important;
+  transform: scale(var(--tooltipScale));
+  transform-origin: bottom left;
+  padding: 1em;
+  height: 10rem;
+  text-align: center;
+  background-color: blue;
+  border-radius: 0.5em;
+  margin-inline: auto;
+  max-width: 80%;
+  z-index: 999;
+}
+
+.pce-line.annotation:hover:after {
+  display: block;
+  --tooltipScale: 1;
+  transform: translateY(30%);
+  cursor: help;
+}
+
+.annotation:hover {
+  background-color: darkblue!important;
+}
+
+.pce-wrapper>.pce-line:before:hover {
+  background-color: black;
 }
