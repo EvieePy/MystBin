@@ -9,7 +9,7 @@ export default function Index() {
       <SaveButton />
 
       <main>
-        <Editor readOnly={false} />
+        <Editor readOnly={false} index={0}/>
       </main>
     </>
   );
