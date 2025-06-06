@@ -7,7 +7,7 @@ const PasteContext = createContext<PasteStoreT>();
 
 function createPasteStore(): PasteStoreT {
   const [pasteState, setPasteState] = createStore({
-    files: []
+    files: [{"name": "unknown", "content": ""}]
   });
 
   return [pasteState, setPasteState] as PasteStoreT;
