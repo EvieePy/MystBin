@@ -11,7 +11,13 @@ function createSettingsStore(): SettingsStoreT {
     submenu: 0,
     ligatures: false,
     word_wrap: false,
-    line_numbers: true
+    line_numbers: true,
+    is_light: false,
+    theme: "default",
+    font_size: "default",
+    colour_mode: "default",
+    current_file: 0,
+    sec_keys: []
   });
   return [settingsState, setSettingsState] as SettingsStoreT;
 }

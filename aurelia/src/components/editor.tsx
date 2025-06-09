@@ -11,7 +11,7 @@ import "solid-prism-editor/themes/github-dark.css";
 import "solid-prism-editor/search.css";
 import "solid-prism-editor/copy-button.css";
 import { useSettingsContext } from "~/stores/settings";
-import { createEffect, createMemo, createSignal, onMount } from "solid-js";
+import { createMemo } from "solid-js";
 import { usePasteContext } from "~/stores/paste";
 import { produce } from "solid-js/store";
 
@@ -27,16 +27,21 @@ export default (props: Props) => {
   const extensions = createMemo(() => (settings.word_wrap ? [copyButton()] : [copyButton(), indentGuides()]));
 
   const onUpdate = (value: string, editor: PrismEditor) => {
-    if (!paste.files[props.index]) { return };
+    if (!paste.files[props.index]) {
+      return;
+    }
 
-    setPaste("files", props.index, produce((file) => {
-      file.content = value;
-    }));
-  }
+    setPaste(
+      "files",
+      props.index,
+      produce((file) => {
+        file.content = value;
+      })
+    );
+  };
 
   // onMount(() => {
   //   if (!props.initialValue) { return }
-
 
   //   const line = document.querySelector('[data-line="2"]');
   //   line?.classList.add("annotation");
@@ -49,7 +54,7 @@ export default (props: Props) => {
       wordWrap={settings.word_wrap}
       lineNumbers={settings.line_numbers}
       class={settings.ligatures ? "ligatures" : ""}
-      language={paste.files[props.index] ? paste.files[props.index].language : ""}
+      language={paste.files[props.index] ? paste.files[props.index].language || "" : ""}
       value={props.initialValue}
       readOnly={props.readOnly}
       extensions={extensions()}

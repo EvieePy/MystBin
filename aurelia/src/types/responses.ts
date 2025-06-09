@@ -31,3 +31,10 @@ interface AnnotationArea {
 interface VersionResponse {
   version: string;
 }
+
+interface ErrorT {}
+
+interface ErrorResponse {
+  message: string;
+  errors?: ErrorT;
+}

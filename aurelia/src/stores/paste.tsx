@@ -1,13 +1,14 @@
 import { createContext, JSX, useContext } from "solid-js";
 import { createStore, SetStoreFunction } from "solid-js/store";
 
-type PasteStoreT = [PasteCreate, SetStoreFunction<PasteCreate>];
+export type PasteStoreT = [PasteCreate | PasteResponse, SetStoreFunction<PasteCreate | PasteResponse>];
+export type PasteRStoreT = [PasteResponse, SetStoreFunction<PasteResponse>];
 
 const PasteContext = createContext<PasteStoreT>();
 
 function createPasteStore(): PasteStoreT {
   const [pasteState, setPasteState] = createStore({
-    files: [{"name": "unknown", "content": ""}]
+    files: [{ name: "unknown", content: "" }]
   });
 
   return [pasteState, setPasteState] as PasteStoreT;
