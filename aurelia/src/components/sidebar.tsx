@@ -1,4 +1,15 @@
-import { createSignal, createEffect, Match, Switch, Suspense, createResource, onMount, createRenderEffect } from "solid-js";
+import {
+  createSignal,
+  createEffect,
+  Match,
+  Switch,
+  Suspense,
+  createResource,
+  onMount,
+  createRenderEffect,
+  For,
+  Show
+} from "solid-js";
 import ChevronRightSVG from "~/svg/ChevronRight";
 import ChevronDownSVG from "~/svg/ChevronDown";
 import HamburgerMenuSVG from "~/svg/HamburgerMenu";
@@ -16,6 +27,8 @@ import HomeSVG from "~/svg/Home";
 import FileSVG from "~/svg/File";
 import { createServerCookie } from "@solid-primitives/cookies";
 import HelpSVG from "~/svg/Help";
+import { usePasteContext } from "~/stores/paste";
+import localforage from "localforage";
 
 const fetchApiVersion = async () => {
   let resp: Response;
@@ -36,6 +49,7 @@ const fetchApiVersion = async () => {
 
 export default function SideBar() {
   const [settings, setSettings] = useSettingsContext();
+  const [paste] = usePasteContext();
   const [asideClosedCookie, setAsideClosedCookie] = createServerCookie("asideClosed");
 
   const initialAsideClosed = asideClosedCookie() === "true";
@@ -45,19 +59,30 @@ export default function SideBar() {
 
   const [showAccessModal, setshowAccessModal] = createSignal(false);
   const [apiVersion] = createResource(fetchApiVersion);
+  const [extraButtons, setExtraButtons] = createSignal<string | null>(null);
 
   createRenderEffect(() => {
     setAsideClosed(asideClosedCookie() === "true");
   });
 
-  onMount(() => {
+  onMount(async () => {
     const localTheme = localStorage.getItem("theme") as "light" | "dark";
     const systemSettingDark = !window.matchMedia("(prefers-color-scheme: dark)")?.matches;
     const colourMode = localStorage.getItem("colour_mode") as CBModes;
+    const secKeys = (await localforage.getItem("sec_keys")) as SecurityKey[];
 
+    setSettings("sec_keys", secKeys ? secKeys : []);
     setSettings("is_light", localTheme ? localTheme === "light" : systemSettingDark);
     setSettings("theme", localTheme || (systemSettingDark ? "dark" : "light"));
     setSettings("colour_mode", colourMode || "default");
+
+    if (!paste) {
+      return;
+    }
+    if ((paste as PasteResponse).id) {
+      const foundKey: SecurityKey | undefined = secKeys.find((obj) => (paste as PasteResponse).id === obj.id);
+      setExtraButtons(foundKey?.key || null);
+    }
   });
 
   let hideTextTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -311,21 +336,16 @@ export default function SideBar() {
             </span>
             <ul class={settings.submenu === 1 ? "subMenu showMenu" : "subMenu"}>
               <div>
-                <li>
-                  <span classList={{ hide: hideText() }}>Tab 1</span>
-                </li>
-                <li>
-                  <span classList={{ hide: hideText() }}>Tab 2</span>
-                </li>
-                <li class="active">
-                  <span classList={{ hide: hideText() }}>Tab 3</span>
-                </li>
-                <li>
-                  <span classList={{ hide: hideText() }}>Tab 4</span>
-                </li>
-                <li>
-                  <span classList={{ hide: hideText() }}>Tab 5</span>
-                </li>
+                <For each={paste.files}>
+                  {(file, index) => (
+                    <li
+                      onclick={() => setSettings("current_file", index)}
+                      classList={{ active: settings.current_file === index() }}
+                    >
+                      <span classList={{ hide: hideText() }}>{file.name || "undefined"}</span>
+                    </li>
+                  )}
+                </For>
               </div>
             </ul>
           </li>
@@ -426,6 +446,12 @@ export default function SideBar() {
 
         {/* Sidebar Meta Data */}
         <div class="meta">
+          <Show when={extraButtons()}>
+            <div class="manageButtons">
+              <div class="deleteButton">Delete</div>
+              <div class="securityButton">Security Info</div>
+            </div>
+          </Show>
           <Suspense fallback={<span class="smallText">...</span>}>
             <Switch>
               <Match when={apiVersion.error}>
