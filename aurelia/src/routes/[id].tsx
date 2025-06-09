@@ -1,5 +1,5 @@
 import { redirect, useNavigate, useParams } from "@solidjs/router";
-import { createResource, Show } from "solid-js";
+import { createEffect, createResource, Show } from "solid-js";
 import { clientOnly } from "@solidjs/start";
 
 import dayjs from "dayjs";
@@ -11,6 +11,8 @@ import RawSVG from "~/svg/Raw";
 import TimeSVG from "~/svg/Time";
 import HourglassSVG from "~/svg/Hourglass";
 import EyeSVG from "~/svg/Eye";
+import { PasteRStoreT, usePasteContext } from "~/stores/paste";
+import { useSettingsContext } from "~/stores/settings";
 
 dayjs.extend(relativeTime);
 
@@ -19,8 +21,10 @@ const Editor = clientOnly(() => import("~/components/editor"));
 export default function PastePage() {
   const navigate = useNavigate();
   const params = useParams();
+  const [paste, setPaste] = usePasteContext() as PasteRStoreT;
+  const [settings, setSettings] = useSettingsContext();
 
-  const [paste] = createResource(async () => {
+  const [pasteR] = createResource(async () => {
     let resp: Response;
 
     try {
@@ -43,39 +47,45 @@ export default function PastePage() {
     }
   });
 
+  createEffect(() => {
+    if (!pasteR()) {
+      return;
+    }
+
+    // @ts-ignore
+    setPaste(pasteR());
+  });
+
   const getRT = () => {
-    const pasteC = paste();
-    if (!pasteC) {
+    if (!paste) {
       return "...";
     }
 
-    const created = dayjs(pasteC.created_at);
+    const created = dayjs(paste.created_at);
     return dayjs().to(created);
   };
 
   const getExpRT = () => {
-    const pasteC = paste();
-    if (!pasteC) {
+    if (!paste) {
       return;
     }
-    if (!pasteC.expires_at) {
+    if (!paste.expires_at) {
       return;
     }
 
-    const expiry = dayjs(pasteC.expires_at);
+    const expiry = dayjs(paste.expires_at);
     return dayjs().to(expiry);
   };
 
   const getRemainingViews = () => {
-    const pasteC = paste();
-    if (!pasteC) {
+    if (!paste) {
       return;
     }
-    if (!pasteC.max_views) {
+    if (!paste.max_views) {
       return;
     }
 
-    return pasteC.max_views - pasteC.views;
+    return paste.max_views - paste.views;
   };
 
   return (
@@ -83,7 +93,7 @@ export default function PastePage() {
       <div class="header">
         <div class="metaSection">
           <span class="largeText">
-            <a href={`/${paste()?.id}`}>{paste()?.id}</a>
+            <a href={`/${paste.id}`}>{paste.id}</a>
           </span>
           <div class="metaButtons">
             <span class="metaButton">
@@ -124,7 +134,11 @@ export default function PastePage() {
           </Show>
         </div>
       </div>
-      <Editor initialValue={String(paste()?.files[0].content)} readOnly={true} />
+      <Editor
+        index={settings.current_file}
+        initialValue={String(paste.files[settings.current_file].content)}
+        readOnly={true}
+      />
     </main>
   );
 }
