@@ -1,5 +1,6 @@
 import { createContext, JSX, useContext } from "solid-js";
 import { createStore, SetStoreFunction } from "solid-js/store";
+import { SettingsT } from "~/types/utils";
 
 type SettingsStoreT = [SettingsT, SetStoreFunction<SettingsT>];
 
@@ -15,6 +16,7 @@ function createSettingsStore(): SettingsStoreT {
     is_light: false,
     theme: "default",
     font_size: "default",
+    font: "jetbrains",
     colour_mode: "default",
     current_file: 0,
     sec_keys: []

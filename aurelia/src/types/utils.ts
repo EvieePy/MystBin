@@ -1,9 +1,12 @@
-type SecurityKey = {
+export type SecurityKey = {
   id: string;
   key: string;
 };
 
-type SettingsT = {
+export type FontSizeT = "default" | "small" | "large";
+export type FontT = "jetbrains" | "fira" | "ibmplex" | "notosans" | "roboto" | "sourcecodepro";
+
+export type SettingsT = {
   // Theme State
   theme: "light" | "dark";
   is_light: boolean;
@@ -14,7 +17,8 @@ type SettingsT = {
   line_numbers: boolean;
 
   // Accessibility
-  font_size: "default" | "small" | "large" | "larger";
+  font_size: FontSizeT;
+  font: FontT;
   colour_mode: "default" | "deuteranopia" | "protanopia" | "tritanopia";
 
   // Sidebar State
@@ -23,4 +27,9 @@ type SettingsT = {
   sec_keys: SecurityKey[];
 };
 
-type CBModes = "default" | "deuteranopia" | "protanopia" | "tritanopia";
+export type CBModes = "default" | "deuteranopia" | "protanopia" | "tritanopia";
+
+export interface LangObj {
+  name: string;
+  icon: any;
+}
