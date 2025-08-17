@@ -1,0 +1,117 @@
+import CIcon from "~/svg/langs/c";
+import PythonIcon from "~/svg/langs/python";
+import BashIcon from "~/svg/langs/bash";
+import CPPIcon from "~/svg/langs/cpp";
+import CSharpIcon from "~/svg/langs/csharp.jsx";
+import CSSIcon from "~/svg/langs/css";
+import GoIcon from "~/svg/langs/go.jsx";
+import JavascriptIcon from "~/svg/langs/javascript";
+import RustIcon from "~/svg/langs/rust";
+import TextIcon from "~/svg/langs/text";
+import TypescriptIcon from "~/svg/langs/typescript";
+import SXIcon from "~/svg/langs/sx";
+import { LangObj } from "~/types/utils";
+
+export const LANGS: LangObj[] = [
+  { name: "regex", icon: TextIcon },
+  { name: "yaml", icon: TextIcon },
+  { name: "tsx", icon: SXIcon },
+  { name: "typescript", icon: TypescriptIcon },
+  { name: "scss", icon: CSSIcon },
+  { name: "makefile", icon: TextIcon },
+  { name: "json", icon: TextIcon },
+  { name: "graphql", icon: TextIcon },
+  { name: "csharp", icon: CSharpIcon },
+  { name: "clike", icon: CIcon },
+  { name: "swift", icon: TextIcon },
+  { name: "rust", icon: RustIcon },
+  { name: "python", icon: PythonIcon },
+  { name: "perl", icon: TextIcon },
+  { name: "lua", icon: TextIcon },
+  { name: "jsx", icon: SXIcon },
+  { name: "javascript", icon: JavascriptIcon },
+  { name: "go", icon: GoIcon },
+  { name: "cpp", icon: CPPIcon },
+  { name: "wasm", icon: TextIcon },
+  { name: "sql", icon: TextIcon },
+  { name: "ruby", icon: TextIcon },
+  { name: "objectivec", icon: TextIcon },
+  { name: "less", icon: TextIcon },
+  { name: "java", icon: TextIcon },
+  { name: "diff", icon: TextIcon },
+  { name: "opencl", icon: TextIcon },
+  { name: "c", icon: CIcon },
+  { name: "vbnet", icon: TextIcon },
+  { name: "basic", icon: TextIcon },
+  { name: "r", icon: TextIcon },
+  { name: "php", icon: TextIcon },
+  { name: "markdown", icon: TextIcon },
+  { name: "xml", icon: TextIcon },
+  { name: "markup", icon: TextIcon },
+  { name: "css", icon: CSSIcon },
+  { name: "bash", icon: BashIcon },
+  { name: "ini", icon: TextIcon },
+  { name: "toml", icon: TextIcon },
+  { name: "kotlin", icon: TextIcon },
+  { name: "text", icon: TextIcon }
+];
+LANGS.sort((a, b) => a.name.localeCompare(b.name));
+
+export const EXTS: Record<string, string> = {
+  ".yaml": "yaml",
+  ".yml": "yaml",
+  ".tsx": "tsx",
+  ".ts": "typescript",
+  ".scss": "scss",
+  Make: "makefile",
+  ".json": "json",
+  ".gql": "graphql",
+  ".graphql": "graphql",
+  ".cs": "csharp",
+  ".csproj": "csharp",
+  ".c": "c",
+  ".h": "c",
+  ".swift": "swift",
+  ".rs": "rust",
+  ".py": "python",
+  ".pyc": "python",
+  ".pyx": "python",
+  ".pl": "perl",
+  ".pm": "perl",
+  ".lua": "lua",
+  ".jsx": "jsx",
+  ".js": "javascript",
+  ".go": "go",
+  ".cpp": "cpp",
+  ".hpp": "cpp",
+  ".wasm": "wasm",
+  ".sql": "sql",
+  ".rb": "ruby",
+  ".rake": "ruby",
+  ".arb": "ruby",
+  ".m": "objectivec",
+  ".less": "less",
+  ".java": "java",
+  ".jar": "java",
+  ".class": "java",
+  ".diff": "diff",
+  ".patch": "diff",
+  ".cl": "opencl",
+  ".vb": "vbnet",
+  ".vbproj": "vbnet",
+  ".bas": "basic",
+  ".vbp": "basic",
+  ".r": "r",
+  ".php": "php",
+  ".md": "markdown",
+  ".mdx": "markdown",
+  ".html": "markup",
+  ".xml": "xml",
+  ".css": "css",
+  ".sh": "bash",
+  ".ini": "ini",
+  ".kt": "kotlin",
+  ".kts": "kotlin",
+  ".txt": "text",
+  ".toml": "toml"
+};
