@@ -29,6 +29,13 @@ import { createServerCookie } from "@solid-primitives/cookies";
 import HelpSVG from "~/svg/Help";
 import { usePasteContext } from "~/stores/paste";
 import localforage from "localforage";
+import { CBModes, FontSizeT, FontT, SecurityKey } from "~/types/utils";
+import ColourBlindCard from "./colourBlindCard";
+
+import { LangObj } from "~/types/utils";
+import { LANGS, EXTS } from "~/utils";
+import TextIcon from "~/svg/langs/text";
+import FontSelector from "./fontSelector";
 
 const fetchApiVersion = async () => {
   let resp: Response;
@@ -49,7 +56,7 @@ const fetchApiVersion = async () => {
 
 export default function SideBar() {
   const [settings, setSettings] = useSettingsContext();
-  const [paste] = usePasteContext();
+  const [paste, setPaste] = usePasteContext();
   const [asideClosedCookie, setAsideClosedCookie] = createServerCookie("asideClosed");
 
   const initialAsideClosed = asideClosedCookie() === "true";
@@ -70,11 +77,15 @@ export default function SideBar() {
     const systemSettingDark = !window.matchMedia("(prefers-color-scheme: dark)")?.matches;
     const colourMode = localStorage.getItem("colour_mode") as CBModes;
     const secKeys = (await localforage.getItem("sec_keys")) as SecurityKey[];
+    const fontSize = (await localforage.getItem("font_size")) as FontSizeT;
+    const font = (await localforage.getItem("font")) as FontT;
 
     setSettings("sec_keys", secKeys ? secKeys : []);
     setSettings("is_light", localTheme ? localTheme === "light" : systemSettingDark);
     setSettings("theme", localTheme || (systemSettingDark ? "dark" : "light"));
     setSettings("colour_mode", colourMode || "default");
+    setSettings("font_size", fontSize || "default");
+    setSettings("font", font || "jetbrains");
 
     if (!paste) {
       return;
@@ -99,6 +110,32 @@ export default function SideBar() {
     }
   });
 
+  const deletePaste = async (pasteId: string) => {
+    let resp: Response;
+
+    const storage = (await localforage.getItem("sec_keys")) as SecurityKey[];
+    const secKeys: SecurityKey[] = storage ? storage : [];
+
+    if (!secKeys || secKeys.length <= 0) {
+      return;
+    }
+    const token = secKeys.find((k) => k.id === pasteId);
+
+    if (!token) {
+      return;
+    }
+
+    try {
+      resp = await fetch(`http://localhost:8000/security/${token.key}`, { method: "DELETE" });
+    } catch (error) {
+      console.error(error);
+      return;
+    }
+
+    // Dumb
+    window.location.href = "/";
+  };
+
   const handleSubMenu = (data: number, e: MouseEvent) => {
     e.preventDefault();
 
@@ -122,6 +159,9 @@ export default function SideBar() {
     if (asideClosed() === false) {
       setSettings("submenu", 0);
       localStorage.setItem("submenu", "0");
+    } else {
+      setSettings("submenu", 1);
+      localStorage.setItem("submenu", "1");
     }
 
     setAsideClosedCookie(String(!asideClosed()));
@@ -175,12 +215,54 @@ export default function SideBar() {
     setSettings("colour_mode", value);
   };
 
+  const findLangByExt = (name: string): LangObj => {
+    let splat = name.split(".");
+    let ext = splat[splat.length - 1];
+
+    const lang: string | undefined = EXTS[`.${ext}`];
+    return LANGS.find((l) => l.name === lang) || { name: "text", icon: TextIcon };
+  };
+
+  const handleHome = () => {
+    // Dumb
+    // Extra dumb
+    window.location.href = "/";
+  };
+
+  // const findLang = (index: number): LangObj => {
+  //   const name = paste.files[index].language || "text";
+  //   let lang = LANGS.find((l) => l.name === name);
+
+  //   if (lang !== undefined) {
+  //     return lang;
+  //   }
+
+  //   lang = LANGS.find((l) => l.name === findLangByExt(name));
+  //   return lang || { name: "text", icon: TextIcon };
+  // };
+
   // TODO: Mobile detection...
 
   return (
     <>
       {/* Modals */}
       <SettingsModal showModal={showAccessModal()} title="Accessibility Settings" onOutsideClick={handleOutsideModal}>
+        <span class="settingsHeader">Font Settings</span>
+        <span class="settingsDesc">Settings to adjust the editor font size and style.</span>
+        <div class="accessSettingContainer">
+          <div>
+            <span class="settingsDesc">Font Size</span>
+            <FontSelector size_selector={true} />
+          </div>
+
+          <div>
+            <span class="settingsDesc">Font Family</span>
+            <FontSelector size_selector={false} />
+          </div>
+        </div>
+
+        <hr />
+
         <span class="settingsHeader">Colour Accessibility</span>
         <span class="settingsDesc">Settings to help with various colour deficiencies and colour blindness.</span>
 
@@ -190,26 +272,7 @@ export default function SideBar() {
             classList={{ activeSetting: settings.colour_mode === "default" }}
             onclick={() => handleColourBlindMode("default")}
           >
-            <div class="colourBlindInner">
-              <div class="colourBlindTitle">Default</div>
-
-              <div class="colourBlindPreview">
-                <div class="colourBlindSide">
-                  <div style="border: 1px solid #ce75cc;"></div>
-                  <div style="border: 1px solid #ce75cc;"></div>
-                  <div style="border: 1px solid #ce75cc;"></div>
-                  <div style="border: 1px solid #ce75cc;"></div>
-                </div>
-                <div class="colourBlindMain">
-                  <div class="colourBlindMainInner">
-                    <div class="colourBlindBox" style="background-color: #34af9b;"></div>
-                    <div class="colourBlindBox" style="background-color: #f0e442;"></div>
-                  </div>
-                  <div style="border: 2px solid #34af9b;"></div>
-                  <div style="border: 2px solid #f0e442;"></div>
-                </div>
-              </div>
-            </div>
+            <ColourBlindCard box_one="#34af9b" box_two="#f0e442" line_one="#34af9b" line_two="#f0e442" border="#ce75cc;" />
           </div>
 
           <div
@@ -217,26 +280,7 @@ export default function SideBar() {
             classList={{ activeSetting: settings.colour_mode === "deuteranopia" }}
             onclick={() => handleColourBlindMode("deuteranopia")}
           >
-            <div class="colourBlindInner">
-              <div class="colourBlindTitle">Deuteranopia</div>
-
-              <div class="colourBlindPreview">
-                <div class="colourBlindSide">
-                  <div style="border: 1px solid #6288d1;"></div>
-                  <div style="border: 1px solid #6288d1;"></div>
-                  <div style="border: 1px solid #6288d1;"></div>
-                  <div style="border: 1px solid #6288d1;"></div>
-                </div>
-                <div class="colourBlindMain">
-                  <div class="colourBlindMainInner">
-                    <div class="colourBlindBox" style="background-color: #1585fd;"></div>
-                    <div class="colourBlindBox" style="background-color: #d69a00;"></div>
-                  </div>
-                  <div style="border: 2px solid #1585fd;"></div>
-                  <div style="border: 2px solid #d69a00;"></div>
-                </div>
-              </div>
-            </div>
+            <ColourBlindCard box_one="#1585fd;" box_two="#d69a00" line_one="#1585fd;" line_two="#d69a00" border="#6288d1;" />
           </div>
 
           <div
@@ -244,52 +288,14 @@ export default function SideBar() {
             classList={{ activeSetting: settings.colour_mode === "protanopia" }}
             onclick={() => handleColourBlindMode("protanopia")}
           >
-            <div class="colourBlindInner">
-              <div class="colourBlindTitle">Protanopia</div>
-
-              <div class="colourBlindPreview">
-                <div class="colourBlindSide">
-                  <div style="border: 1px solid #ce75cc;"></div>
-                  <div style="border: 1px solid #ce75cc;"></div>
-                  <div style="border: 1px solid #ce75cc;"></div>
-                  <div style="border: 1px solid #ce75cc;"></div>
-                </div>
-                <div class="colourBlindMain">
-                  <div class="colourBlindMainInner">
-                    <div class="colourBlindBox" style="background-color: #1585fd;"></div>
-                    <div class="colourBlindBox" style="background-color: #E1EC1B;"></div>
-                  </div>
-                  <div style="border: 2px solid #1585fd;"></div>
-                  <div style="border: 2px solid #E1EC1B;"></div>
-                </div>
-              </div>
-            </div>
+            <ColourBlindCard box_one="#1585fd" box_two="#E1EC1B" line_one="#1585fd" line_two="#E1EC1B" border="#ce75cc;" />
           </div>
           <div
             class="colourBlindContainer"
             classList={{ activeSetting: settings.colour_mode === "tritanopia" }}
             onclick={() => handleColourBlindMode("tritanopia")}
           >
-            <div class="colourBlindInner">
-              <div class="colourBlindTitle">Tritanopia</div>
-
-              <div class="colourBlindPreview">
-                <div class="colourBlindSide">
-                  <div style="border: 1px solid #1585fd;"></div>
-                  <div style="border: 1px solid #1585fd;"></div>
-                  <div style="border: 1px solid #1585fd;"></div>
-                  <div style="border: 1px solid #1585fd;"></div>
-                </div>
-                <div class="colourBlindMain">
-                  <div class="colourBlindMainInner">
-                    <div class="colourBlindBox" style="background-color: #1585fd;"></div>
-                    <div class="colourBlindBox" style="background-color: #fa4549;"></div>
-                  </div>
-                  <div style="border: 2px solid #1585fd;"></div>
-                  <div style="border: 2px solid #fa4549;"></div>
-                </div>
-              </div>
-            </div>
+            <ColourBlindCard box_one="#1585fd" box_two="#fa4549" line_one="#1585fd" line_two="#fa4549" border="#1585fd;" />
           </div>
         </div>
       </SettingsModal>
@@ -299,7 +305,7 @@ export default function SideBar() {
           <li class="sideHeader" classList={{ sideHeaderClosed: Boolean(asideClosed()) }}>
             <Switch>
               <Match when={!Boolean(asideClosed())}>
-                <span class="logo">
+                <span class="logo" onclick={handleHome}>
                   <LogoSVG /> MystBin
                 </span>
               </Match>
@@ -312,11 +318,11 @@ export default function SideBar() {
             </span>
           </li>
 
-          <li>
-            <a href="/">
+          <li onclick={handleHome}>
+            <span class="sideButton">
               <HomeSVG />
               <span classList={{ hide: hideText() }}>Home</span>
-            </a>
+            </span>
           </li>
 
           {/* Files Submenu */}
@@ -342,49 +348,16 @@ export default function SideBar() {
                       onclick={() => setSettings("current_file", index)}
                       classList={{ active: settings.current_file === index() }}
                     >
-                      <span classList={{ hide: hideText() }}>{file.name || "undefined"}</span>
+                      <span classList={{ fileName: true, hide: hideText() }}>
+                        {findLangByExt(file.name || "text").icon}
+                        {file.name || "new_file"}
+                      </span>
                     </li>
                   )}
                 </For>
               </div>
             </ul>
           </li>
-
-          {/* Actions Submenu */}
-          {/* <li class="noBack" classList={{ active: settings.submenu === 2 }}>
-            <span class="sideButton" on:click={(e) => handleSubMenu(2, e)}>
-              <ActionsSVG />
-              <span classList={{ hide: hideText() }}>Manage</span>
-              <Switch>
-                <Match when={Boolean(asideClosed())}>{null}</Match>
-                <Match when={settings.submenu === 2}>
-                  <ChevronDownSVG />
-                </Match>
-                <Match when={settings.submenu !== 2}>
-                  <ChevronRightSVG />
-                </Match>
-              </Switch>
-            </span>
-            <ul class={settings.submenu === 2 ? "subMenu showMenu" : "subMenu"}>
-              <div>
-                <li>
-                  <span classList={{ hide: hideText() }}>Tab 1</span>
-                </li>
-                <li>
-                  <span classList={{ hide: hideText() }}>Tab 2</span>
-                </li>
-                <li class="active">
-                  <span classList={{ hide: hideText() }}>Tab 3</span>
-                </li>
-                <li>
-                  <span classList={{ hide: hideText() }}>Tab 4</span>
-                </li>
-                <li>
-                  <span classList={{ hide: hideText() }}>Tab 5</span>
-                </li>
-              </div>
-            </ul>
-          </li> */}
 
           {/* Settings Submenu */}
           <li class="noBack" classList={{ active: settings.submenu === 3 }}>
@@ -448,7 +421,9 @@ export default function SideBar() {
         <div class="meta">
           <Show when={extraButtons()}>
             <div class="manageButtons">
-              <div class="deleteButton">Delete</div>
+              <div class="deleteButton" onclick={() => deletePaste((paste as PasteResponse).id)}>
+                Delete
+              </div>
               <div class="securityButton">Security Info</div>
             </div>
           </Show>
